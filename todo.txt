@@ -1,0 +1,4 @@
+- Close neotree on close all
+- Switch between files (keybinding)
+- Allow plugins to access files they need
+- Format on save
