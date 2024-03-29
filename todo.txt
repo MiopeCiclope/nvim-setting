@@ -1,1 +1,5 @@
+- fix git bar on left that toggles
+- debbuger
+- tests
+- copilot
 - Format on save
