@@ -1,3 +1,2 @@
-- tests
 - copilot
-- Format on save
+- obsidian
