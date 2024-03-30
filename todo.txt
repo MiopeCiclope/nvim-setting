@@ -1,5 +1,3 @@
-not worth the trouble - fix git bar on left that toggles
-- debbuger for react/js/ts
 - tests
 - copilot
 - Format on save
