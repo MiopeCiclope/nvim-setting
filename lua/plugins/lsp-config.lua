@@ -15,6 +15,11 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
+		opts = {
+			diagnostics = {
+				virtual_text = false,
+			},
+		},
 		config = function()
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()

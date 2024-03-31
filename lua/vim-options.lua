@@ -7,7 +7,9 @@ vim.cmd("set ignorecase")
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
-
+vim.diagnostic.config({
+  virtual_text = false,
+})
 -- Navigate vim panes
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
@@ -21,6 +23,7 @@ vim.keymap.set("n", "<C-e>", ":bd!<CR>", { noremap = true })
 vim.keymap.set("n", "<C-g>", ":DiffviewOpen<CR>", { noremap = true })
 vim.keymap.set("n", "<C-d>", ":DiffviewClose<CR>", { noremap = true })
 vim.keymap.set("i", "<C-v>", "<C-o>$")
-vim.keymap.set({"n", "o"}, "t", "$")
+vim.keymap.set({"n", "o", "v"}, "t", "$")
 vim.keymap.set("i", "<C-c>", "<C-o>0")
-vim.keymap.set({"n", "o"}, "r", "g0")
+vim.keymap.set({"n", "o", "v"}, "r", "g0")
+vim.keymap.set({"n", "o", "v"}, "w", "b")
