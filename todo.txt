@@ -1,2 +1,2 @@
-- copilot
 - obsidian
+- only show the file name in telescope/full path if name repeats
