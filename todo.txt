@@ -1,2 +1,3 @@
 - obsidian
 - only show the file name in telescope/full path if name repeats
+- put error in the end of the line and make leader d togle between virtual lines and it
