@@ -1,6 +1,4 @@
 - obsidian
-- only show the file name in telescope/full path if name repeats
-- put error in the end of the line and make leader d togle between virtual lines and it
 - make tmux session templates have in session path instead of defaul path for the whole thing 
 - make yank copy to clipboard (tmux and nvim) 
 - make paste (nvim p), paste from clipboard
