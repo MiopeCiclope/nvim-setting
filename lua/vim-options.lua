@@ -4,6 +4,7 @@ vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set ignorecase")
+vim.cmd("set clipboard+=unnamedplus")
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
@@ -39,9 +40,14 @@ _G.toggle_virtual_text = function()
     print("Virtual line mode")
   else
     vim.diagnostic.config({ virtual_text = true })
-    vim.diagnostic.config( { virtual_lines = false })
+    vim.diagnostic.config({ virtual_lines = false })
     print("Virtual text mode")
   end
 end
 
+_G.disableDiagnostics = function()
+  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+end
+
 vim.keymap.set('n', '<Leader>d', '<cmd>lua toggle_virtual_text()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<Leader>dd', '<cmd>lua disableDiagnostics()<CR>', { noremap = true, silent = true })

@@ -1,4 +1,3 @@
 - obsidian
-- make tmux session templates have in session path instead of defaul path for the whole thing 
-- make yank copy to clipboard (tmux and nvim) 
-- make paste (nvim p), paste from clipboard
+work shit - make tmux session templates have in session path instead of defaul path for the whole thing 
+
