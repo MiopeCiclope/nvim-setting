@@ -1,3 +1,0 @@
-- obsidian
-work shit - make tmux session templates have in session path instead of defaul path for the whole thing 
-
