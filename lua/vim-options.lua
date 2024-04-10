@@ -27,6 +27,7 @@ vim.keymap.set({ "n", "o", "v" }, "t", "$", { noremap = true, silent = true })
 vim.keymap.set("i", "<C-c>", "<C-o>0", { noremap = true, silent = true })
 vim.keymap.set({ "n", "o", "v" }, "r", "^", { noremap = true, silent = true })
 vim.keymap.set({ "n", "o", "v" }, "w", "b", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>%", ":vsplit<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
   virtual_text = true,
