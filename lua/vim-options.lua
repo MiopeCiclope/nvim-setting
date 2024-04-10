@@ -8,6 +8,7 @@ vim.cmd("set clipboard+=unnamedplus")
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
+vim.opt.conceallevel = 2
 
 -- Navigate vim panes
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
