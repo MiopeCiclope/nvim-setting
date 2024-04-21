@@ -18,7 +18,7 @@ vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
 
 vim.keymap.set("n", "<C-a>", "ggVG", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-m>", ":bnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-n>", ":bprevious<CR>", { noremap = true, silent = true  })
+vim.keymap.set("n", "<C-n>", ":bprevious<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-e>", ":bd!<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-g>", ":DiffviewOpen<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-d>", ":DiffviewClose<CR>", { noremap = true, silent = true })
@@ -53,3 +53,4 @@ end
 
 vim.keymap.set('n', '<Leader>d', '<cmd>lua toggle_virtual_text()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<Leader>dd', '<cmd>lua disableDiagnostics()<CR>', { noremap = true, silent = true })
+vim.keymap.set("x", "/", ":<C-u>FineCmdline<CR>/\\%V", { noremap = true, silent = true })
