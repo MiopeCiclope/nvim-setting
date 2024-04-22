@@ -6,7 +6,7 @@ return {
   config = function()
     require("fine-cmdline").setup({
       cmdline = {
-        prompt = 'CMD -> '
+        prompt = 'CMD | '
       },
       popup = {
         size = {
