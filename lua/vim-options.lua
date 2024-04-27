@@ -53,4 +53,4 @@ end
 
 vim.keymap.set('n', '<Leader>d', '<cmd>lua toggle_virtual_text()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<Leader>dd', '<cmd>lua disableDiagnostics()<CR>', { noremap = true, silent = true })
-vim.keymap.set("x", "/", ":<C-u>FineCmdline<CR>/\\%V", { noremap = true, silent = true })
+vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })

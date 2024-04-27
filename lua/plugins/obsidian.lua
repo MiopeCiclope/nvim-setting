@@ -31,18 +31,18 @@ return {
 				template = nil,
 			},
 		})
-		vim.keymap.set("n", "<leader>o", ":ObsidianToday<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>oa", ":ObsidianTomorrow<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>oo", ":ObsidianYesterday<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>on", ":ObsidianNew ", { noremap = false })
-		vim.keymap.set("n", "<leader>oww", ":ObsidianWorkspace work<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>owp", ":ObsidianWorkspace personal<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>ot", ":ObsidianTags<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>op", ":ObsidianSearc<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>ott", ":ObsidianTemplate<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>o", "<cmd>ObsidianToday<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>oa", "<cmd>ObsidianTomorrow<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>oo", "<cmd>ObsidianYesterday<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>on", "<cmd>ObsidianNew ", { noremap = false })
+		vim.keymap.set("n", "<leader>oww", "<cmd>ObsidianWorkspace work<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>owp", "<cmd>ObsidianWorkspace personal<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>op", "<cmd>ObsidianSearc<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>ott", "<cmd>ObsidianTemplate<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>og", function()
 			if require("obsidian").util.cursor_on_markdown_link() then
-				return ":ObsidianFollowLink<CR>"
+				return "<cmd>ObsidianFollowLink<CR>"
 			else
 				return "gf"
 			end
