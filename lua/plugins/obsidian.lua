@@ -34,7 +34,7 @@ return {
 		vim.keymap.set("n", "<leader>o", "<cmd>ObsidianToday<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>oa", "<cmd>ObsidianTomorrow<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>oo", "<cmd>ObsidianYesterday<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>on", "<cmd>ObsidianNew ", { noremap = false })
+		vim.keymap.set("n", "<leader>on", ":ObsidianNew ", { noremap = false })
 		vim.keymap.set("n", "<leader>oww", "<cmd>ObsidianWorkspace work<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>owp", "<cmd>ObsidianWorkspace personal<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", { noremap = false })
