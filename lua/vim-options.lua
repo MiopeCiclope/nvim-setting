@@ -5,6 +5,9 @@ vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set ignorecase")
 vim.cmd("set clipboard+=unnamedplus")
+vim.cmd("set termguicolors")
+vim.cmd("set relativenumber")
+
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
