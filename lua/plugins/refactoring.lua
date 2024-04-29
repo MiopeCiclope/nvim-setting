@@ -24,9 +24,7 @@ return {
 			return node
 		end
 
-		_G.select_block = function()
-			local node = get_master_node()
-			local buffer_number = vim.api.nvim_get_current_buf()
+		local select_comma = function(buffer_number, node)
 			local start_row, start_col, end_row, end_col = ts_utils.get_node_range(node)
 
 			-- Get the buffer text
@@ -34,14 +32,21 @@ return {
 
 			-- Extract the next character
 			local next_char = buffer_text[1]:sub(end_col + 1, end_col + 1)
-			
+
 			-- Adjust the node's end column if the next character is a comma
 			if next_char == "," then
 				end_col = end_col + 1
 			end
 
+			vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col - 1 })
+		end
+
+		_G.select_block = function()
+			local node = get_master_node()
+			local buffer_number = vim.api.nvim_get_current_buf()
+
 			ts_utils.update_selection(buffer_number, node)
-			vim.api.nvim_win_set_cursor(0, { end_row +1, end_col -1})
+			select_comma(buffer_number, node)
 		end
 
 		vim.keymap.set("x", "<leader>rf", ":Refactor extract ")
