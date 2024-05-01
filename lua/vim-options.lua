@@ -7,6 +7,7 @@ vim.cmd("set ignorecase")
 vim.cmd("set clipboard+=unnamedplus")
 vim.cmd("set termguicolors")
 vim.cmd("set relativenumber")
+vim.cmd("set splitright")
 
 vim.g.mapleader = " "
 
