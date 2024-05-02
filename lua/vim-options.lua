@@ -13,6 +13,7 @@ vim.g.mapleader = " "
 
 vim.opt.swapfile = false
 vim.opt.conceallevel = 2
+vim.opt.cursorline = true
 
 -- Navigate vim panes
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")

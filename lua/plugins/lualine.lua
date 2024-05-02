@@ -27,13 +27,7 @@ return {
             cond = require("noice").api.status.message.has,
           },
         },
-        lualine_x = {
-          {
-            require("noice").api.status.command.get,
-            cond = require("noice").api.status.command.has,
-            color = { fg = "green" },
-          },
-        },
+        lualine_x = {},
         lualine_y = {
           {
             "macro-recording",
