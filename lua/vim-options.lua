@@ -14,6 +14,7 @@ vim.g.mapleader = " "
 vim.opt.swapfile = false
 vim.opt.conceallevel = 2
 vim.opt.cursorline = true
+vim.opt.scrolloff = 16
 
 -- Navigate vim panes
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
@@ -35,28 +36,28 @@ vim.keymap.set({ "n", "o", "v" }, "w", "b", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>%", ":vsplit<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
-  virtual_text = true,
-  virtual_lines = false
+	virtual_text = true,
+	virtual_lines = false,
 })
 
 _G.toggle_virtual_text = function()
-  local current_value = vim.diagnostic.config().virtual_text
-  if current_value then
-    vim.diagnostic.config({ virtual_text = false })
-    vim.diagnostic.config({ virtual_lines = true })
-    print("Virtual line mode")
-  else
-    vim.diagnostic.config({ virtual_text = true })
-    vim.diagnostic.config({ virtual_lines = false })
-    print("Virtual text mode")
-  end
+	local current_value = vim.diagnostic.config().virtual_text
+	if current_value then
+		vim.diagnostic.config({ virtual_text = false })
+		vim.diagnostic.config({ virtual_lines = true })
+		print("Virtual line mode")
+	else
+		vim.diagnostic.config({ virtual_text = true })
+		vim.diagnostic.config({ virtual_lines = false })
+		print("Virtual text mode")
+	end
 end
 
 _G.disableDiagnostics = function()
-  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+	vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
 end
 
-vim.keymap.set('n', '<Leader>d', '<cmd>lua toggle_virtual_text()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<Leader>dd', '<cmd>lua disableDiagnostics()<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>dd", "<cmd>lua disableDiagnostics()<CR>", { noremap = true, silent = true })
 vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
 vim.keymap.set("n", "s", "<cmd>lua select_block()<CR>", { noremap = true, silent = true })

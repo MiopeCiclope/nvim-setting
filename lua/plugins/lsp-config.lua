@@ -32,7 +32,7 @@ return {
 					"-Xmx12g",
 					"-XX:MaxMetaspaceSize=512m",
           "-XX:ReservedCodeCacheSize=512m",
-          "--XX:CICompilerCount=7",
+          "-XX:CICompilerCount=7",
 					"-Dfile.encoding=UTF-8",
 				},
 			})
