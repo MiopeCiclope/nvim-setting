@@ -36,28 +36,57 @@ vim.keymap.set({ "n", "o", "v" }, "w", "b", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>%", ":vsplit<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
-	virtual_text = true,
-	virtual_lines = false,
+  virtual_text = true,
+  virtual_lines = false,
 })
 
 _G.toggle_virtual_text = function()
-	local current_value = vim.diagnostic.config().virtual_text
-	if current_value then
-		vim.diagnostic.config({ virtual_text = false })
-		vim.diagnostic.config({ virtual_lines = true })
-		print("Virtual line mode")
-	else
-		vim.diagnostic.config({ virtual_text = true })
-		vim.diagnostic.config({ virtual_lines = false })
-		print("Virtual text mode")
-	end
+  local current_value = vim.diagnostic.config().virtual_text
+  if current_value then
+    vim.diagnostic.config({ virtual_text = false })
+    vim.diagnostic.config({ virtual_lines = true })
+    print("Virtual line mode")
+  else
+    vim.diagnostic.config({ virtual_text = true })
+    vim.diagnostic.config({ virtual_lines = false })
+    print("Virtual text mode")
+  end
 end
 
 _G.disableDiagnostics = function()
-	vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
 end
 
 vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Leader>dd", "<cmd>lua disableDiagnostics()<CR>", { noremap = true, silent = true })
 vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
 vim.keymap.set("n", "s", "<cmd>lua select_block()<CR>", { noremap = true, silent = true })
+
+function _G.map(mode, keys, command)
+  vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
+end
+
+local function makeTagKeymap(char, completion)
+  local command = char .. completion .. '<Esc>ha'
+  map('i', char, command)
+end
+
+local function setupTagCompletion(mapping_table)
+  for char, completion in pairs(mapping_table) do
+    makeTagKeymap(char, completion)
+  end
+end
+
+-- Define your table of mappings
+local mappings = {
+  ['{'] = '}',
+  ['['] = ']',
+  ['('] = ')',
+  ['"'] = '"',
+  ['´'] = '´',
+  ['\''] = '\'',
+  ['`'] = '`',
+}
+
+-- Example usage:
+setupTagCompletion(mappings)
