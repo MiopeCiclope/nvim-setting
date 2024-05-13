@@ -4,10 +4,18 @@ vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set ignorecase")
+-- Use clipboard instead of registers
 vim.cmd("set clipboard+=unnamedplus")
 vim.cmd("set termguicolors")
 vim.cmd("set relativenumber")
+-- on vertical split put new pane in the right
 vim.cmd("set splitright")
+
+-- Center cursor on insert
+vim.cmd("autocmd InsertEnter * norm zz")
+
+-- Remove trailing white space
+vim.cmd("autocmd BufWritePre * %s/\\s\\+$//e")
 
 vim.g.mapleader = " "
 
@@ -62,10 +70,13 @@ vim.keymap.set("n", "<Leader>dd", "<cmd>lua disableDiagnostics()<CR>", { noremap
 vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
 vim.keymap.set("n", "s", "<cmd>lua select_block()<CR>", { noremap = true, silent = true })
 
+-- makes keymaps with less words
 function _G.map(mode, keys, command)
   vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
 end
 
+--#region autopair replacer
+-- create keymaps for automatically close brankets
 local function makeTagKeymap(char, completion)
   local command = char .. completion .. '<Esc>ha'
   map('i', char, command)
@@ -90,3 +101,52 @@ local mappings = {
 
 -- Example usage:
 setupTagCompletion(mappings)
+
+
+--#endregion
+
+--#region auto-tag
+-- Define your tag function
+_G.extract_last_html_tag = function()
+  -- Get the current line text
+  local text = vim.api.nvim_get_current_line()
+  -- Match the last HTML tag and extract the tag name
+  local tag = text:match("<(%a+)")
+  return "></" .. tag .. ">"
+end
+
+map("i", ">", "<cmd>lua extract_last_html_tag()<CR>")
+
+--#endregion
+
+
+
+--#region Commenter
+--check the mode and find the lines to comment
+-- function M.operator(mode)
+--   local line1, line2
+--   if not mode then
+--     line1 = vim.api.nvim_win_get_cursor(0)[1]
+--     line2 = line1
+--   elseif mode:match("[vV]") then
+--     line1 = vim.api.nvim_buf_get_mark(0, "<")[1]
+--     line2 = vim.api.nvim_buf_get_mark(0, ">")[1]
+--   else
+--     line1 = vim.api.nvim_buf_get_mark(0, "[")[1]
+--     line2 = vim.api.nvim_buf_get_mark(0, "]")[1]
+--   end
+--
+--   M.comment_toggle(line1, line2)
+-- end
+--
+-- _G.comment = function()
+--   -- find the comment characters
+--   local commentString = vim.api.nvim_buf_get_option(0, "cms")
+--   local commentChars = commentString:match("^(.*)%%s(.*)")
+--
+--   print(commentChars)
+-- end
+-- map("n", "<leader>pp", "<cmd>lua comment()<CR>")
+--
+
+--#endregion

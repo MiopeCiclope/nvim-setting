@@ -11,9 +11,6 @@ return {
 			ensure_installed = { "lua", "javascript", "typescript", "java", "go", "html", "css" },
 			highlight = { enable = true },
 			indent = { enable = true },
-			autotag = {
-				enable = true,
-			},
 		})
 	end,
 }
