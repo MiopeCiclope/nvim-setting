@@ -42,27 +42,28 @@ vim.keymap.set("i", "<C-c>", "<C-o>0", { noremap = true, silent = true })
 vim.keymap.set({ "n", "o", "v" }, "r", "^", { noremap = true, silent = true })
 vim.keymap.set({ "n", "o", "v" }, "w", "b", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>%", ":vsplit<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>l", "<Cmd>noh<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
-  virtual_text = true,
-  virtual_lines = false,
+	virtual_text = true,
+	virtual_lines = false,
 })
 
 _G.toggle_virtual_text = function()
-  local current_value = vim.diagnostic.config().virtual_text
-  if current_value then
-    vim.diagnostic.config({ virtual_text = false })
-    vim.diagnostic.config({ virtual_lines = true })
-    print("Virtual line mode")
-  else
-    vim.diagnostic.config({ virtual_text = true })
-    vim.diagnostic.config({ virtual_lines = false })
-    print("Virtual text mode")
-  end
+	local current_value = vim.diagnostic.config().virtual_text
+	if current_value then
+		vim.diagnostic.config({ virtual_text = false })
+		vim.diagnostic.config({ virtual_lines = true })
+		print("Virtual line mode")
+	else
+		vim.diagnostic.config({ virtual_text = true })
+		vim.diagnostic.config({ virtual_lines = false })
+		print("Virtual text mode")
+	end
 end
 
 _G.disableDiagnostics = function()
-  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+	vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
 end
 
 vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
@@ -72,54 +73,85 @@ vim.keymap.set("n", "s", "<cmd>lua select_block()<CR>", { noremap = true, silent
 
 -- makes keymaps with less words
 function _G.map(mode, keys, command)
-  vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
+	vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
 end
 
 --#region autopair replacer
 -- create keymaps for automatically close brankets
 local function makeTagKeymap(char, completion)
-  local command = char .. completion .. '<Esc>ha'
-  map('i', char, command)
+	local command = char .. completion .. "<Esc>ha"
+	map("i", char, command)
 end
 
 local function setupTagCompletion(mapping_table)
-  for char, completion in pairs(mapping_table) do
-    makeTagKeymap(char, completion)
-  end
+	for char, completion in pairs(mapping_table) do
+		makeTagKeymap(char, completion)
+	end
 end
 
 -- Define your table of mappings
 local mappings = {
-  ['{'] = '}',
-  ['['] = ']',
-  ['('] = ')',
-  ['"'] = '"',
-  ['´'] = '´',
-  ['\''] = '\'',
-  ['`'] = '`',
+	["{"] = "}",
+	["["] = "]",
+	["("] = ")",
+	['"'] = '"',
+	["´"] = "´",
+	["'"] = "'",
+	["`"] = "`",
 }
 
 -- Example usage:
 setupTagCompletion(mappings)
-
 
 --#endregion
 
 --#region auto-tag
 -- Define your tag function
 _G.extract_last_html_tag = function()
-  -- Get the current line text
-  local text = vim.api.nvim_get_current_line()
-  -- Match the last HTML tag and extract the tag name
-  local tag = text:match("<(%a+)")
-  return "></" .. tag .. ">"
+	-- Get the current line text
+	local text = vim.api.nvim_get_current_line()
+	-- Match the last HTML tag and extract the tag name
+	local tag = text:match("<(%a+)")
+	return "></" .. tag .. ">"
 end
 
-map("i", ">", "<cmd>lua extract_last_html_tag()<CR>")
+vim.cmd([[
+  augroup jsx_tsx_mappings
+    autocmd!
+    autocmd FileType jsx,tsx lua setupAutoTag()
+  augroup END
+]])
+
+function setupAutoTag()
+	vim.api.nvim_buf_set_keymap(0, "i", ">", "v:lua._G.extract_last_html_tag()", { noremap = true, expr = true })
+end
 
 --#endregion
 
+--#region color scheme
+vim.cmd([[
+    syntax enable
+    set background=dark
+    highlight clear
+    if exists("syntax_on")
+        syntax reset
+    endif
+    let g:colors_name = "custom_dark"
 
+    highlight Normal guifg=#DCDCDC guibg=#2E3440
+    highlight Comment guifg=#7F8C98
+    highlight Constant guifg=#D08770
+    highlight Identifier guifg=#8FBCBB
+    highlight Statement guifg=#88C0D0
+    highlight PreProc guifg=#81A1C1
+    highlight Type guifg=#8FBCBB
+    highlight Special guifg=#EBCB8B
+    highlight Underlined guifg=#88C0D0 gui=underline
+    highlight Todo guifg=#EBCB8B guibg=#5C6370
+    highlight Pmenu guibg=#3B4252 guifg=#D8DEE9
+    highlight PmenuSel guibg=#434C5E guifg=#ECEFF4
+]])
+--#endregion
 
 --#region Commenter
 --check the mode and find the lines to comment
