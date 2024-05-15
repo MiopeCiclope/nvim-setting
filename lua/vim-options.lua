@@ -118,21 +118,21 @@ end
 vim.cmd([[
   augroup jsx_tsx_mappings
     autocmd!
-    autocmd FileType jsx,tsx lua setupAutoTag()
+    autocmd FileType typescriptreact,javascriptreact,html lua setupAutoTag()
   augroup END
 ]])
 
-local function setupAutoTag()
+_G.setupAutoTag = function()
   vim.api.nvim_buf_set_keymap(0, "i", ">", "v:lua._G.extract_last_html_tag()", { noremap = true, expr = true })
 end
 
 --#endregion
 
 --#region
-vim.cmd("colorscheme torte")
+vim.cmd("colorscheme pastel_torte")
 
 -- Set the highlight for FloatBorder
-vim.api.nvim_command('highlight FloatBorder guifg=white guibg=#1f2335')
+vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
 --#endregion
 
 --#region Commenter
