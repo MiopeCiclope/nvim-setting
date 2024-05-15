@@ -129,7 +129,7 @@ end
 --#endregion
 
 --#region
-vim.cmd("colorscheme pastel_torte")
+vim.cmd("colorscheme desert_pastel")
 
 -- Set the highlight for FloatBorder
 vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
@@ -164,3 +164,5 @@ vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
 --
 
 --#endregion
+
+vim.opt.cmdheight = 0

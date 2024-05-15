@@ -23,24 +23,14 @@ return {
 
 		require("lualine").setup({
 			options = { theme = customTheme },
-			tabline = {
-				lualine_a = {
-					{
-						"buffers",
-						buffers_color = {
-							active = { bg = blackColor, fg = whiteColor },
-							inactive = { bg = whiteColor, fg = blackColor },
-						},
-					},
-				},
-				lualine_z = { { "branch", color = { bg = whiteColor } } },
-			},
 			sections = {
-				lualine_a = { { "mode", right_padding = 2 } },
+				lualine_a = {
+					{ "mode", right_padding = 2 },
+				},
 				lualine_b = { "filename", "location" },
 				lualine_c = {},
-				lualine_x = {},
-				lualine_y = { "diagnostics" },
+				lualine_x = { "diagnostics" },
+				lualine_y = {},
 				lualine_z = {
 					{
 						"macro-recording",
