@@ -14,10 +14,10 @@ highlight Comment      guifg=#A0C0FF
 highlight Constant     guifg=#FFA07A
 highlight Special      guifg=#FFFFFF
 highlight Identifier   guifg=#edb1fa
-highlight Statement    guifg=#98FB98
+highlight Statement    guifg=#00CED1
 highlight PreProc      guifg=#DA70D6
 highlight Type         guifg=#AFEEEE
-highlight Underlined   guifg=#00CED1
+highlight Underlined   guifg=#98FB98
 highlight Todo         guifg=#B0C4DE guibg=#4682B4
 highlight String       guifg=#FFC0CB
 highlight Function     guifg=#00FA9A

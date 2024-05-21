@@ -69,7 +69,6 @@ end
 vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Leader>dd", "<cmd>lua disableDiagnostics()<CR>", { noremap = true, silent = true })
 vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
-vim.keymap.set("n", "s", "<cmd>lua select_block()<CR>", { noremap = true, silent = true })
 
 -- makes keymaps with less words
 function _G.map(mode, keys, command)
@@ -110,9 +109,17 @@ setupTagCompletion(mappings)
 _G.extract_last_html_tag = function()
 	-- Get the current line text
 	local text = vim.api.nvim_get_current_line()
+
 	-- Match the last HTML tag and extract the tag name
 	local tag = text:match("<(%a+)")
-	return "></" .. tag .. ">"
+	if tag then
+		vim.schedule(function()
+			vim.cmd("normal! F<a")
+		end)
+		return "></" .. tag .. ">"
+	else
+		return ">"
+	end
 end
 
 vim.cmd([[
@@ -165,25 +172,25 @@ vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
 
 --#endregion
 
-vim.opt.cmdheight = 5
+-- vim.opt.cmdheight = 0
 
--- -- Define a global function to capture and display command output
-function _G.capture_command_output()
-	local cmd = vim.fn.getcmdline()
-	local output = vim.fn.execute(cmd)
-	print("mensagem pra tu " .. output)
-end
-
--- Set up autocommands to hook into command line events
-vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
-	callback = function()
-		print("left")
-	end,
-})
-
--- Set up autocommands to hook into command line events
-vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-	callback = function()
-		capture_command_output()
-	end,
-})
+-- -- -- Define a global function to capture and display command output
+-- function _G.capture_command_output()
+-- 	local cmd = vim.fn.getcmdline()
+-- 	local output = vim.fn.execute(cmd)
+-- 	print("mensagem pra tu " .. output)
+-- end
+--
+-- -- Set up autocommands to hook into command line events
+-- vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
+-- 	callback = function()
+-- 		print("left")
+-- 	end,
+-- })
+--
+-- -- Set up autocommands to hook into command line events
+-- vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+-- 	callback = function()
+-- 		capture_command_output()
+-- 	end,
+-- })
