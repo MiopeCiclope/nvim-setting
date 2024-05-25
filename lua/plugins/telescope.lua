@@ -14,7 +14,7 @@ return {
 			vim.keymap.set("n", "<C-p>", builtin.find_files, {})
 			vim.keymap.set("n", "<C-z>", builtin.live_grep, {})
 			vim.keymap.set("n", "<leader>rr", builtin.lsp_references, {})
-			vim.keymap.set("n", "<leader>,", builtin.keymaps, {})
+			vim.keymap.set("n", "<leader>b", ":Telescope buffers<CR>", { noremap = true, silent = true })
 		end,
 	},
 	{
