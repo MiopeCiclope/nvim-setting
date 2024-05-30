@@ -31,7 +31,6 @@ return {
 				template = nil,
 			},
 		})
-		vim.keymap.set("n", "<leader>o", "<cmd>ObsidianToday<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>oa", "<cmd>ObsidianTomorrow<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>oo", "<cmd>ObsidianYesterday<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>on", ":ObsidianNew ", { noremap = false })
