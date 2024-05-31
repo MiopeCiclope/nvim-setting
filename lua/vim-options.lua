@@ -45,25 +45,25 @@ vim.keymap.set("n", "<leader>%", ":vsplit<CR>", { noremap = true, silent = true 
 vim.keymap.set("n", "<Leader>l", "<Cmd>noh<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
-	virtual_text = true,
-	virtual_lines = false,
+  virtual_text = true,
+  virtual_lines = false,
 })
 
 _G.toggle_virtual_text = function()
-	local current_value = vim.diagnostic.config().virtual_text
-	if current_value then
-		vim.diagnostic.config({ virtual_text = false })
-		vim.diagnostic.config({ virtual_lines = true })
-		print("Virtual line mode")
-	else
-		vim.diagnostic.config({ virtual_text = true })
-		vim.diagnostic.config({ virtual_lines = false })
-		print("Virtual text mode")
-	end
+  local current_value = vim.diagnostic.config().virtual_text
+  if current_value then
+    vim.diagnostic.config({ virtual_text = false })
+    vim.diagnostic.config({ virtual_lines = true })
+    print("Virtual line mode")
+  else
+    vim.diagnostic.config({ virtual_text = true })
+    vim.diagnostic.config({ virtual_lines = false })
+    print("Virtual text mode")
+  end
 end
 
 _G.disableDiagnostics = function()
-	vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
 end
 
 vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
@@ -72,30 +72,30 @@ vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
 
 -- makes keymaps with less words
 function _G.map(mode, keys, command)
-	vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
+  vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
 end
 
 --#region autopair replacer
 -- create keymaps for automatically close brankets
 local function makeTagKeymap(char, completion)
-	local command = char .. completion .. "<Esc>ha"
-	map("i", char, command)
+  local command = char .. completion .. "<Esc>ha"
+  map("i", char, command)
 end
 
 local function setupTagCompletion(mapping_table)
-	for char, completion in pairs(mapping_table) do
-		makeTagKeymap(char, completion)
-	end
+  for char, completion in pairs(mapping_table) do
+    makeTagKeymap(char, completion)
+  end
 end
 
 -- Define your table of mappings
 local mappings = {
-	["{"] = "}",
-	["["] = "]",
-	["("] = ")",
-	['"'] = '"',
-	["´"] = "´",
-	["`"] = "`",
+  ["{"] = "}",
+  ["["] = "]",
+  ["("] = ")",
+  ['"'] = '"',
+  ["´"] = "´",
+  ["`"] = "`",
 }
 
 -- Example usage:
@@ -105,20 +105,29 @@ setupTagCompletion(mappings)
 
 --#region auto-tag
 -- Define your tag function
-_G.extract_last_html_tag = function()
-	-- Get the current line text
-	local text = vim.api.nvim_get_current_line()
 
-	-- Match the last HTML tag and extract the tag name
-	local tag = text:match("<(%a+)")
-	if tag then
-		vim.schedule(function()
-			vim.cmd("normal! F<a")
-		end)
-		return "></" .. tag .. ">"
-	else
-		return ">"
-	end
+_G.findLastTag = function(text)
+  local lastTag = nil
+  for tag in text:gmatch("<(%a+)[^>]*") do
+    lastTag = tag
+  end
+  return lastTag
+end
+
+_G.extract_last_html_tag = function()
+  -- Get the current line text
+  local text = vim.api.nvim_get_current_line()
+
+  -- Match the last HTML tag and extract the tag name
+  local tag = findLastTag(text)
+  if tag then
+    vim.schedule(function()
+      vim.cmd("normal! F<a")
+    end)
+    return "></" .. tag .. ">"
+  else
+    return ">"
+  end
 end
 
 vim.cmd([[
@@ -129,67 +138,15 @@ vim.cmd([[
 ]])
 
 _G.setupAutoTag = function()
-	vim.api.nvim_buf_set_keymap(0, "i", ">", "v:lua._G.extract_last_html_tag()", { noremap = true, expr = true })
+  vim.api.nvim_buf_set_keymap(0, "i", ">", "v:lua._G.extract_last_html_tag()", { noremap = true, expr = true })
 end
 
 --#endregion
 
 --#region
+-- colorscheme
 vim.cmd("colorscheme desert_pastel")
 
 -- Set the highlight for FloatBorder
 vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
 --#endregion
-
---#region Commenter
---check the mode and find the lines to comment
--- function M.operator(mode)
---   local line1, line2
---   if not mode then
---     line1 = vim.api.nvim_win_get_cursor(0)[1]
---     line2 = line1
---   elseif mode:match("[vV]") then
---     line1 = vim.api.nvim_buf_get_mark(0, "<")[1]
---     line2 = vim.api.nvim_buf_get_mark(0, ">")[1]
---   else
---     line1 = vim.api.nvim_buf_get_mark(0, "[")[1]
---     line2 = vim.api.nvim_buf_get_mark(0, "]")[1]
---   end
---
---   M.comment_toggle(line1, line2)
--- end
---
--- _G.comment = function()
---   -- find the comment characters
---   local commentString = vim.api.nvim_buf_get_option(0, "cms")
---   local commentChars = commentString:match("^(.*)%%s(.*)")
---
---   print(commentChars)
--- end
--- map("n", "<leader>pp", "<cmd>lua comment()<CR>")
---
-
---#endregion
-
--- vim.opt.cmdheight = 0
-
--- -- -- Define a global function to capture and display command output
--- function _G.capture_command_output()
--- 	local cmd = vim.fn.getcmdline()
--- 	local output = vim.fn.execute(cmd)
--- 	print("mensagem pra tu " .. output)
--- end
---
--- -- Set up autocommands to hook into command line events
--- vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
--- 	callback = function()
--- 		print("left")
--- 	end,
--- })
---
--- -- Set up autocommands to hook into command line events
--- vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
--- 	callback = function()
--- 		capture_command_output()
--- 	end,
--- })
