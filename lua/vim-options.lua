@@ -45,25 +45,25 @@ vim.keymap.set("n", "<leader>%", ":vsplit<CR>", { noremap = true, silent = true 
 vim.keymap.set("n", "<Leader>l", "<Cmd>noh<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
-  virtual_text = true,
-  virtual_lines = false,
+	virtual_text = true,
+	virtual_lines = false,
 })
 
 _G.toggle_virtual_text = function()
-  local current_value = vim.diagnostic.config().virtual_text
-  if current_value then
-    vim.diagnostic.config({ virtual_text = false })
-    vim.diagnostic.config({ virtual_lines = true })
-    print("Virtual line mode")
-  else
-    vim.diagnostic.config({ virtual_text = true })
-    vim.diagnostic.config({ virtual_lines = false })
-    print("Virtual text mode")
-  end
+	local current_value = vim.diagnostic.config().virtual_text
+	if current_value then
+		vim.diagnostic.config({ virtual_text = false })
+		vim.diagnostic.config({ virtual_lines = true })
+		print("Virtual line mode")
+	else
+		vim.diagnostic.config({ virtual_text = true })
+		vim.diagnostic.config({ virtual_lines = false })
+		print("Virtual text mode")
+	end
 end
 
 _G.disableDiagnostics = function()
-  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+	vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
 end
 
 vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
@@ -72,30 +72,30 @@ vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
 
 -- makes keymaps with less words
 function _G.map(mode, keys, command)
-  vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
+	vim.api.nvim_set_keymap(mode, keys, command, { noremap = true })
 end
 
 --#region autopair replacer
 -- create keymaps for automatically close brankets
 local function makeTagKeymap(char, completion)
-  local command = char .. completion .. "<Esc>ha"
-  map("i", char, command)
+	local command = char .. completion .. "<Esc>ha"
+	map("i", char, command)
 end
 
 local function setupTagCompletion(mapping_table)
-  for char, completion in pairs(mapping_table) do
-    makeTagKeymap(char, completion)
-  end
+	for char, completion in pairs(mapping_table) do
+		makeTagKeymap(char, completion)
+	end
 end
 
 -- Define your table of mappings
 local mappings = {
-  ["{"] = "}",
-  ["["] = "]",
-  ["("] = ")",
-  ['"'] = '"',
-  ["´"] = "´",
-  ["`"] = "`",
+	["{"] = "}",
+	["["] = "]",
+	["("] = ")",
+	['"'] = '"',
+	["´"] = "´",
+	["`"] = "`",
 }
 
 -- Example usage:
@@ -105,29 +105,33 @@ setupTagCompletion(mappings)
 
 --#region auto-tag
 -- Define your tag function
-
 _G.findLastTag = function(text)
-  local lastTag = nil
-  for tag in text:gmatch("<(%a+)[^>]*") do
-    lastTag = tag
-  end
-  return lastTag
+	local lastTag = nil
+	for tag in text:gmatch("<(%w+([%.%w+]*))[^>]*") do
+		lastTag = tag
+	end
+	return lastTag
 end
 
 _G.extract_last_html_tag = function()
-  -- Get the current line text
-  local text = vim.api.nvim_get_current_line()
+	-- Get the current line text
+	local text = vim.api.nvim_get_current_line()
 
-  -- Match the last HTML tag and extract the tag name
-  local tag = findLastTag(text)
-  if tag then
-    vim.schedule(function()
-      vim.cmd("normal! F<a")
-    end)
-    return "></" .. tag .. ">"
-  else
-    return ">"
-  end
+	-- Match the last HTML tag and extract the tag name
+	local tag = findLastTag(text)
+	if tag then
+		-- Get the current cursor position
+		local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+
+		local insert_text = "></" .. tag .. ">"
+		vim.schedule(function()
+			vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { insert_text })
+			vim.api.nvim_win_set_cursor(0, { row, col + 1 })
+		end)
+		return ""
+	else
+		return ">"
+	end
 end
 
 vim.cmd([[
@@ -138,7 +142,7 @@ vim.cmd([[
 ]])
 
 _G.setupAutoTag = function()
-  vim.api.nvim_buf_set_keymap(0, "i", ">", "v:lua._G.extract_last_html_tag()", { noremap = true, expr = true })
+	vim.api.nvim_buf_set_keymap(0, "i", ">", "v:lua._G.extract_last_html_tag()", { noremap = true, expr = true })
 end
 
 --#endregion
