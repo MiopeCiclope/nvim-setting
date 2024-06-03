@@ -31,9 +31,9 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
 
 vim.keymap.set("n", "<C-a>", "ggVG", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-m>", ":bnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-n>", ":bprevious<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-e>", ":bd!<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-e>", ":bnext | bd #<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-g>", ":DiffviewOpen<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-d>", ":DiffviewClose<CR>", { noremap = true, silent = true })
 vim.keymap.set("i", "<C-v>", "<C-o>$", { noremap = true, silent = true })
@@ -98,13 +98,10 @@ local mappings = {
 	["`"] = "`",
 }
 
--- Example usage:
 setupTagCompletion(mappings)
-
 --#endregion
 
 --#region auto-tag
--- Define your tag function
 _G.findLastTag = function(text)
 	local lastTag = nil
 	for tag in text:gmatch("<(%w+([%.%w+]*))[^>]*") do
