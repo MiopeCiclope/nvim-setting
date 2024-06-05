@@ -13,7 +13,6 @@ return {
             auto_quoting = true,
             mappings = {
               i = {
-                ["<C-m>"] = lga_actions.quote_prompt({ postfix = " -g '**/packages/**' "}),
                 ["<C-k>"] = lga_actions.quote_prompt({ postfix = " -t ts" .. ignoreFolders }),
                 ["<C-i>"] = lga_actions.quote_prompt({
                   postfix = " -t js -t ts -t html" .. ignoreFolders,
