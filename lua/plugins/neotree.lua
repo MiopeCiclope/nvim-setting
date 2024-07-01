@@ -9,7 +9,7 @@ return {
 	config = function()
 		require("neo-tree").setup({
 			filesystem = {
-				filters = {
+				filtered_items = {
 					show_hidden = true,
 				},
 			},
