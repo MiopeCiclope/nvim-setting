@@ -32,12 +32,8 @@ return {
     dap.configurations.typescriptreact = { -- change to typescript if needed
       {
         type = "chrome",
-        request = "attach",
-        program = "${file}",
-        cwd = vim.fn.getcwd(),
-        sourceMaps = true,
-        protocol = "inspector",
-        port = 9222,
+        request = "launch",
+        url = "http://localhost:3000",
         webRoot = "${workspaceFolder}",
       },
     }

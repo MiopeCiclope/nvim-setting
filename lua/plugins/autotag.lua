@@ -1,9 +1,11 @@
 return {
-  {
-    dir = "~/projects/autotag",
-    dev = true,
-    config = function()
-      require("autotag").setup()
-    end,
-  },
+	{
+		dir = "~/projects/autotag",
+		dev = true,
+		config = function()
+			require("autotag").setup({
+				patterns = { "*.tsx", "*.jsx", "*.html" },
+			})
+		end,
+	},
 }
