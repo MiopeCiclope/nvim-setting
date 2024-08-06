@@ -34,8 +34,8 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
 
 vim.keymap.set("n", "<C-a>", "ggVG", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-e>", ":bnext | bd #<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-g>", ":DiffviewOpen<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-d>", ":DiffviewClose<CR>", { noremap = true, silent = true })
@@ -52,25 +52,12 @@ vim.diagnostic.config({
 	virtual_lines = false,
 })
 
-_G.toggle_virtual_text = function()
-	local current_value = vim.diagnostic.config().virtual_text
-	if current_value then
-		vim.diagnostic.config({ virtual_text = false })
-		vim.diagnostic.config({ virtual_lines = true })
-		print("Virtual line mode")
-	else
-		vim.diagnostic.config({ virtual_text = true })
-		vim.diagnostic.config({ virtual_lines = false })
-		print("Virtual text mode")
-	end
+_G.toggle_diagnostics = function()
+	local currentValue = vim.diagnostic.config().virtual_text
+	vim.diagnostic.config({ virtual_text = not currentValue })
 end
 
-_G.disableDiagnostics = function()
-	vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
-end
-
-vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_virtual_text()<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Leader>dd", "<cmd>lua disableDiagnostics()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>d", "<cmd>lua toggle_diagnostics()<CR>", { noremap = true, silent = true })
 vim.keymap.set("x", "/", ":<C-u>/\\%V", { noremap = true, silent = true })
 
 -- makes keymaps with less words
@@ -104,13 +91,8 @@ local mappings = {
 setupTagCompletion(mappings)
 --#endregion
 
---#region
 -- colorscheme
 vim.cmd("colorscheme desert_pastel")
-
--- Set the highlight for FloatBorder
-vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
---#endregion
 
 -- Function to open diagnostics in a new buffer
 function OpenDiagnosticsInNewBuffer()

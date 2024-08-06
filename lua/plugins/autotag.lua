@@ -1,5 +1,4 @@
 return {
-
 	{
 		"MiopeCiclope/autotag",
 		config = function()

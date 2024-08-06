@@ -61,3 +61,4 @@ if has("unix")
 endif
 
 highlight CursorLine cterm=NONE guibg=#5c5c5c ctermfg=NONE guibg=#5c5c5c guifg=NONE
+highlight FloatBorder guifg=white guibg=#1f2335
