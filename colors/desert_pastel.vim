@@ -59,3 +59,5 @@ if has("unix")
   highlight Comment ctermfg=153 cterm=NONE guifg=#A0C0FF gui=NONE
  endif
 endif
+
+highlight CursorLine cterm=NONE guibg=#5c5c5c ctermfg=NONE guibg=#5c5c5c guifg=NONE

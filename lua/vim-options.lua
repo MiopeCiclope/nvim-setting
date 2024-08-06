@@ -17,6 +17,9 @@ vim.cmd("autocmd InsertEnter * norm zz")
 -- Remove trailing white space
 vim.cmd("autocmd BufWritePre * %s/\\s\\+$//e")
 
+-- disable signcolumn
+vim.cmd("set signcolumn=no")
+
 vim.g.mapleader = " "
 
 vim.opt.swapfile = false
@@ -101,7 +104,6 @@ local mappings = {
 setupTagCompletion(mappings)
 --#endregion
 
-
 --#region
 -- colorscheme
 vim.cmd("colorscheme desert_pastel")
@@ -112,30 +114,32 @@ vim.api.nvim_command("highlight FloatBorder guifg=white guibg=#1f2335")
 
 -- Function to open diagnostics in a new buffer
 function OpenDiagnosticsInNewBuffer()
-    local diagnostics = vim.diagnostic.get()
-    if vim.tbl_isempty(diagnostics) then
-        print("No diagnostics to display")
-        return
-    end
+	local diagnostics = vim.diagnostic.get()
+	if vim.tbl_isempty(diagnostics) then
+		print("No diagnostics to display")
+		return
+	end
 
-    -- Create a new buffer
-    vim.cmd("new")
-    local buf = vim.api.nvim_get_current_buf()
+	-- Create a new buffer
+	vim.cmd("new")
+	local buf = vim.api.nvim_get_current_buf()
 
-    -- Set buffer options
-    vim.bo[buf].buftype = "nofile"
-    vim.bo[buf].bufhidden = "wipe"
-    vim.bo[buf].swapfile = false
+	-- Set buffer options
+	vim.bo[buf].buftype = "nofile"
+	vim.bo[buf].bufhidden = "wipe"
+	vim.bo[buf].swapfile = false
 
-    -- Populate buffer with diagnostics
-    local lines = {}
-    for _, diagnostic in ipairs(diagnostics) do
-        local line = string.format("%s:%d:%d: %s", diagnostic.source, diagnostic.lnum + 1, diagnostic.col + 1, diagnostic.message)
-        table.insert(lines, line)
-    end
+	-- Populate buffer with diagnostics
+	local lines = {}
+	for _, diagnostic in ipairs(diagnostics) do
+		local clean_message = diagnostic.message:gsub("\n", " ")
+		local line =
+			string.format("%s:%d:%d: %s", diagnostic.source, diagnostic.lnum + 1, diagnostic.col + 1, clean_message)
+		table.insert(lines, line)
+	end
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 end
 
 -- Create a command to open diagnostics in a new buffer
-vim.api.nvim_create_user_command('OpenDiagnostics', OpenDiagnosticsInNewBuffer, {})
+vim.api.nvim_create_user_command("OpenDiagnostics", OpenDiagnosticsInNewBuffer, {})
