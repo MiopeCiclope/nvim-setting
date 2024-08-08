@@ -22,12 +22,20 @@ return {
     customTheme.insert.c.bg = blackColor
     customTheme.visual.c.bg = blackColor
 
-    local function getJobStatus()
-      return require("job-notifier").getState("react")
+    local job_notifier = require("job-notifier")
+    local function getReact()
+      return job_notifier.getState("react")
     end
 
-    local function getJobStatus2()
-      return require("job-notifier").getState("watcher")
+    local function getWatcher()
+      return job_notifier.getState("watcher")
+    end
+
+    local function removeNil(str)
+      if str == nil or str == "nil" then
+        return ""
+      end
+      return str
     end
 
     require("lualine").setup({
@@ -37,13 +45,29 @@ return {
           { "mode", right_padding = 2 },
         },
         lualine_b = { "filename", "location" },
-        lualine_c = { getJobStatus },
+        lualine_c = { {
+          "macro-recording",
+          fmt = show_macro_recording,
+        } },
         lualine_x = { "diagnostics" },
-        lualine_y = { getJobStatus2 },
+        lualine_y = {
+          {
+            getWatcher,
+            fmt = removeNil,
+            color = function(section)
+              return job_notifier.getColor("watcher")
+            end,
+            icon = { "\u{ea70}", color = { fg = "white" } },
+          },
+        },
         lualine_z = {
           {
-            "macro-recording",
-            fmt = show_macro_recording,
+            getReact,
+            fmt = removeNil,
+            color = function(section)
+              return job_notifier.getColor("react")
+            end,
+            icon = { "\u{e7ba}", color = { fg = "white" } },
           },
         },
       },

@@ -9,9 +9,18 @@ return {
           cmd = "npm start",
           log_file = "reactLog.txt",
           stages = {
-            ["Compiling"] = "Building",
-            ["No issues found"] = "Build Successful",
-            ["ERROR in"] = "Build Failed",
+            ["Compiling"] = {
+              text = "Building",
+              color = { fg = "white" },
+            },
+            ["No issues found"] = {
+              text = "Success",
+              color = { fg = "lightgreen" },
+            },
+            ["ERROR in"] = {
+              text = "Fail",
+              color = { fg = "red" },
+            },
           },
         },
         {
@@ -19,10 +28,22 @@ return {
           cmd = "npm run watch",
           log_file = "watcherLog.txt",
           stages = {
-            ["Executing command"] = "Watching",
-            ["NODE_ENV=production"] = "Building packages",
-            ["Nx read the output"] = "Build Successful",
-            ["targets failed"] = "Build Failed",
+            ["Executing command"] = {
+              text = "Watching",
+              color = { fg = "white" },
+            },
+            ["NODE_ENV=production"] = {
+              text = "Building",
+              color = { fg = "white" },
+            },
+            ["Nx read the output"] = {
+              text = "Success",
+              color = { fg = "lightgreen" },
+            },
+            ["ERROR"] = {
+              text = "Fail",
+              color = { fg = "red" },
+            },
           },
         },
       },
