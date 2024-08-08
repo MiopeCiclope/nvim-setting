@@ -65,9 +65,15 @@ return {
             getReact,
             fmt = removeNil,
             color = function(section)
-              return job_notifier.getColor("react")
+              local font_color = "white"
+              local status_color = job_notifier.getColor("react")
+              if status_color ~= nil and status_color ~= "nil" then
+                font_color = status_color.fg
+              end
+              return { fg = font_color, bg = "none" }
             end,
-            icon = { "\u{e7ba}", color = { fg = "white" } },
+            icon = { "\u{e7ba}", color = { fg = "white", bg = "none" } },
+            separator = { left = "" },
           },
         },
       },
