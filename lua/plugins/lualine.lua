@@ -55,9 +55,10 @@ return {
             getWatcher,
             fmt = removeNil,
             color = function(section)
-              return job_notifier.getColor("watcher")
+              return { fg = job_notifier.getColor("watcher"), bg = "white", gui = "bold" }
             end,
-            icon = { "\u{ea70}", color = { fg = "white" } },
+            icon = { "\u{ea70}", color = { fg = "black", bg = "white" } },
+            separator = { left = "|" },
           },
         },
         lualine_z = {
@@ -65,15 +66,10 @@ return {
             getReact,
             fmt = removeNil,
             color = function(section)
-              local font_color = "white"
-              local status_color = job_notifier.getColor("react")
-              if status_color ~= nil and status_color ~= "nil" then
-                font_color = status_color.fg
-              end
-              return { fg = font_color, bg = "none" }
+              return { fg = job_notifier.getColor("react"), bg = "#f5dbc9", gui = "bold" }
             end,
-            icon = { "\u{e7ba}", color = { fg = "white", bg = "none" } },
-            separator = { left = "" },
+            icon = { "\u{e7ba}", color = { fg = "black", bg = "#f5dbc9" } },
+            separator = { left = "|" },
           },
         },
       },
