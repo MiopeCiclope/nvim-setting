@@ -11,15 +11,15 @@ return {
           stages = {
             ["Compiling"] = {
               text = "Building",
-              color = { fg = "white" },
+              color = "black",
             },
             ["No issues found"] = {
               text = "Success",
-              color = { fg = "lightgreen" },
+              color = "green",
             },
             ["ERROR in"] = {
               text = "Fail",
-              color = { fg = "red" },
+              color = "red",
             },
           },
         },
@@ -30,19 +30,19 @@ return {
           stages = {
             ["Executing command"] = {
               text = "Watching",
-              color = { fg = "white" },
+              color = "black",
             },
             ["NODE_ENV=production"] = {
               text = "Building",
-              color = { fg = "white" },
+              color = "black",
             },
             ["Nx read the output"] = {
               text = "Success",
-              color = { fg = "lightgreen" },
+              color = "green",
             },
             ["ERROR"] = {
               text = "Fail",
-              color = { fg = "red" },
+              color = "red",
             },
           },
         },
