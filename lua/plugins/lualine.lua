@@ -11,17 +11,6 @@ return {
 			end
 		end
 
-		local customTheme = require("lualine.themes.auto")
-		local whiteColor = "#FFFFFF"
-		local blackColor = "#000000"
-		customTheme.normal.a.bg = "#C7A3FF"
-		customTheme.normal.a.fg = blackColor
-		customTheme.normal.b.fg = whiteColor
-		customTheme.normal.c.bg = blackColor
-		customTheme.command.c.bg = blackColor
-		customTheme.insert.c.bg = blackColor
-		customTheme.visual.c.bg = blackColor
-
 		local job_notifier = require("job-notifier")
 		local function getReact()
 			return job_notifier:getStageData("react", "text")
@@ -39,7 +28,6 @@ return {
 		end
 
 		require("lualine").setup({
-			options = { theme = customTheme },
 			sections = {
 				lualine_a = {
 					{ "mode", right_padding = 2 },
