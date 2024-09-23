@@ -33,10 +33,13 @@ return {
 					{ "mode", right_padding = 2 },
 				},
 				lualine_b = { "filename", "location" },
-				lualine_c = { {
-					"macro-recording",
-					fmt = show_macro_recording,
-				} },
+				lualine_c = {
+					{
+						"macro-recording",
+						fmt = show_macro_recording,
+					},
+					require("pomodoro").statusline,
+				},
 				lualine_x = { "diagnostics" },
 				lualine_y = {
 					{
