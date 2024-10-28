@@ -28,11 +28,11 @@ return {
           name = "react",
           cmd = "npm start",
           stages = {
-            ["Compiling"] = {
+            ["NODE_ENV=development"] = {
               text = "Building",
               color = "black",
             },
-            ["No issues found"] = {
+            ["successfully"] = {
               text = "Success",
               color = "green",
             },

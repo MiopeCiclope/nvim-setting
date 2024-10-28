@@ -126,3 +126,15 @@ end
 
 -- Create a command to open diagnostics in a new buffer
 vim.api.nvim_create_user_command("OpenDiagnostics", OpenDiagnosticsInNewBuffer, {})
+
+-- Map Esc to <C-\><C-N> only in Terminal mode
+vim.keymap.set('t', '<Esc>', '<C-\\><C-N>', { noremap = true, silent = true })
+
+-- allow changes on terminal inside vim
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.opt_local.modifiable = true
+  end,
+})
+
