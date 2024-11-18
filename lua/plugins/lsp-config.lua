@@ -11,7 +11,7 @@ return {
       require("mason-lspconfig").setup({
         ensure_installed = {
           "lua_ls",
-          "tsserver",
+          "ts_ls",
           "html",
           "cssls",
           "gopls",
@@ -49,7 +49,7 @@ return {
       })
       lspconfig.gradle_ls.setup({ capabilities = capabilities })
       lspconfig.jsonls.setup({ capabilities = capabilities })
-      lspconfig.tsserver.setup({ capabilities = capabilities })
+      lspconfig.ts_ls.setup({ capabilities = capabilities })
       lspconfig.clangd.setup({ capabilities = capabilities, filetypes = { "c", "cpp", "objc", "objcpp" } })
       lspconfig.bufls.setup({ capabilities = capabilities, filetypes = { "proto" } })
       lspconfig.csharp_ls.setup({ capabilities = capabilities })
