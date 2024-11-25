@@ -35,6 +35,7 @@ return {
 	config = function(_, opts)
 		require("rest-nvim").setup(opts)
 
+    -- this is necessary to make curl output formatting to work
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = { "json" },
 			callback = function()
@@ -74,6 +75,7 @@ return {
 
 		-- Make mimetypes globally available
 		_G.mimetypes = mimetypes
+
 		vim.keymap.set(
 			"n",
 			"<leader>ö",
