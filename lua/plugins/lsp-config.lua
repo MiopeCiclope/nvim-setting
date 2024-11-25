@@ -18,7 +18,6 @@ return {
           "jdtls",
           "gradle_ls",
           "jsonls",
-          "bufls",
           "csharp_ls",
         },
       })
@@ -51,7 +50,6 @@ return {
       lspconfig.jsonls.setup({ capabilities = capabilities })
       lspconfig.ts_ls.setup({ capabilities = capabilities })
       lspconfig.clangd.setup({ capabilities = capabilities, filetypes = { "c", "cpp", "objc", "objcpp" } })
-      lspconfig.bufls.setup({ capabilities = capabilities, filetypes = { "proto" } })
       lspconfig.csharp_ls.setup({ capabilities = capabilities })
 
       vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, {})

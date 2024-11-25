@@ -19,11 +19,14 @@ return {
     -- window separator color
     vim.cmd([[highlight WinSeparator guifg=white]])
 
-    -- unfocused pane/window
-    vim.cmd([[highlight NormalNC guibg=#444444]])
-    vim.cmd([[set winhighlight=NormalNC:NormalNC]])
-
     -- comment font color
     vim.cmd([[highlight Comment      guifg=#B1C4DE]])
+
+    -- float window color
+    vim.cmd([[highlight FloatBorder guifg=#00FF00]])
+    vim.cmd([[highlight TelescopeBorder guifg=#00FF00]])
+
+    -- menu suggestion selection color
+    vim.cmd([[highlight PmenuSel guibg=#45475a guifg=#ffffff]])
   end
 }
