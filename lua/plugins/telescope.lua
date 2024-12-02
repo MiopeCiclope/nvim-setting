@@ -29,7 +29,7 @@ return {
       require("telescope").load_extension("live_grep_args")
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<C-p>", builtin.find_files, {})
-      vim.keymap.set("n", "<C-z>", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", {})
+      vim.keymap.set("n", "<leader>z", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", {})
       vim.keymap.set("n", "<leader>r", builtin.lsp_references, {})
       vim.keymap.set("n", "<leader>b", ":Telescope buffers<CR>", { noremap = true, silent = true })
     end,
