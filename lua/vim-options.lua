@@ -145,7 +145,7 @@ end
 -- Set filetype for .hurl files
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	group = augroup("env_filetype"),
-	pattern = { "*.hurl" },
+	pattern = { "*.http" },
 	callback = function()
 		vim.opt_local.filetype = "sh"
 	end,
