@@ -28,6 +28,9 @@ vim.opt.conceallevel = 2
 vim.opt.cursorline = true
 vim.opt.scrolloff = 16
 
+-- global status line instead of one per split
+vim.opt.laststatus = 3
+
 -- Navigate vim panes
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
@@ -50,9 +53,10 @@ vim.keymap.set("n", '<leader>"', ":split<CR>", { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>l", "<Cmd>noh<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("n", "<C-x>", ":Explore<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>:", ":AvanteToggle<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
-	virtual_text =true,
+	virtual_text = true,
 	virtual_lines = false,
 })
 
@@ -126,6 +130,9 @@ end
 
 -- Create a command to open diagnostics in a new buffer
 vim.api.nvim_create_user_command("OpenDiagnostics", OpenDiagnosticsInNewBuffer, {})
+
+-- command to run http request
+vim.api.nvim_create_user_command("RunRequest", "lua require('kulala').run()", {})
 
 -- Map Esc to <C-\><C-N> only in Terminal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-N>", { noremap = true, silent = true })
