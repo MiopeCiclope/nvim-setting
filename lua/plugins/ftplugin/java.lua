@@ -2,7 +2,6 @@ local jdtls = require("jdtls")
 
 local home = os.getenv("HOME")
 local workspace_dir = home .. "/.cache/jdtls/workspace/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-print("Workspace directory: " .. workspace_dir) -- Debugging line
 
 local config = {
 	cmd = {
@@ -40,7 +39,5 @@ local config = {
 	capabilities = require("cmp_nvim_lsp").default_capabilities(),
 }
 
--- Print to check the full command
-print(vim.inspect(config.cmd)) -- Debugging line
 
-jdtls.start_or_attach(config)
+-- jdtls.start_or_attach(config)
