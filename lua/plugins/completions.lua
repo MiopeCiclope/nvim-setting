@@ -1,42 +1,22 @@
 return {
-	{ "hrsh7th/cmp-nvim-lsp" },
-	{
-		"L3MON4D3/LuaSnip",
-		dependencies = {
-			"saadparwaiz1/cmp_luasnip",
-			"rafamadriz/friendly-snippets",
+	"saghen/blink.cmp",
+	dependencies = "rafamadriz/friendly-snippets",
+	version = "*",
+	opts = {
+		-- 'default' for mappings similar to built-in completion
+		-- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+		-- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+		-- See the full "keymap" documentation for information on defining your own keymap.
+		keymap = { preset = "default" },
+
+		appearance = {
+			use_nvim_cmp_as_default = true,
+			nerd_font_variant = "mono",
+		},
+
+		sources = {
+			default = { "lsp", "path", "snippets", "buffer" },
 		},
 	},
-	{
-		"hrsh7th/nvim-cmp",
-		config = function()
-			-- Set up nvim-cmp.
-			local cmp = require("cmp")
-			require("luasnip").filetype_extend("typescript", { "javascript", "javascriptreact" })
-			require("luasnip.loaders.from_vscode").lazy_load()
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-					end,
-				},
-				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs(-3),
-					["<C-f>"] = cmp.mapping.scroll_docs(3),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-				}),
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" }, -- For luasnip users.
-				}, {
-					{ name = "buffer" },
-				}),
-			})
-		end,
-	},
+	opts_extend = { "sources.default" },
 }
