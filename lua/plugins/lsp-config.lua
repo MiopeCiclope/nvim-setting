@@ -18,13 +18,13 @@ return {
 					"jsonls",
 					"csharp_ls",
 					"ts_ls",
+					"jdtls",
 				},
 			})
 		end,
 	},
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "mfussenegger/nvim-jdtls" },
 		config = function()
 			local lspconfig = require("lspconfig")
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -40,6 +40,16 @@ return {
 			lspconfig.jsonls.setup({ capabilities = capabilities })
 			lspconfig.clangd.setup({ capabilities = capabilities, filetypes = { "c", "cpp", "objc", "objcpp" } })
 			lspconfig.csharp_ls.setup({ capabilities = capabilities })
+			-- lspconfig.jdtls.setup({
+			-- 	cmd = {
+			-- 		"jdtls",
+			-- 		"-Xmx12g",
+			-- 		"-XX:MaxMetaspaceSize=512m",
+			-- 		"-XX:ReservedCodeCacheSize=512m",
+			-- 		"-XX:CICompilerCount=7",
+			-- 		"-Dfile.encoding=UTF-8",
+			-- 	},
+			-- })
 
 			vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, {})
 			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, {})
