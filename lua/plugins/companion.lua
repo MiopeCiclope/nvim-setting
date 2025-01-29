@@ -1,4 +1,5 @@
-local DEFAULT_MODEL = "codestral"
+local DEFAULT_MODEL = "deepseek-r1"
+-- local DEFAULT_MODEL = "codestral"
 
 return {
   "olimorris/codecompanion.nvim",
