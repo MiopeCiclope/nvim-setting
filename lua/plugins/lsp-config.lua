@@ -49,23 +49,23 @@ return {
 			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, {})
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
 
-			local dashed_border = {
-				{ "┌", "FloatBorder" },
-				{ "╌", "FloatBorder" }, -- Dashed horizontal line
-				{ "┐", "FloatBorder" },
-				{ "┆", "FloatBorder" }, -- Dashed vertical line
-				{ "┘", "FloatBorder" },
-				{ "╌", "FloatBorder" }, -- Dashed horizontal line
-				{ "└", "FloatBorder" },
-				{ "┆", "FloatBorder" }, -- Dashed vertical line
-			}
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-				border = dashed_border,
-			})
-
-			vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-				border = dashed_border,
-			})
+			-- local dashed_border = {
+			-- 	{ "┌", "FloatBorder" },
+			-- 	{ "╌", "FloatBorder" }, -- Dashed horizontal line
+			-- 	{ "┐", "FloatBorder" },
+			-- 	{ "┆", "FloatBorder" }, -- Dashed vertical line
+			-- 	{ "┘", "FloatBorder" },
+			-- 	{ "╌", "FloatBorder" }, -- Dashed horizontal line
+			-- 	{ "└", "FloatBorder" },
+			-- 	{ "┆", "FloatBorder" }, -- Dashed vertical line
+			-- }
+			-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+			-- 	border = dashed_border,
+			-- })
+			--
+			-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+			-- 	border = dashed_border,
+			-- })
 		end,
 	},
 }
