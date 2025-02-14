@@ -1,4 +1,4 @@
-local DEFAULT_MODEL = "deepseek-r1"
+local DEFAULT_MODEL = "deepseek-coder-v2:latest"
 -- local DEFAULT_MODEL = "codestral"
 
 return {
