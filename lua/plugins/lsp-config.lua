@@ -11,6 +11,7 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"lua_ls",
+					"pyright",
 					"html",
 					"cssls",
 					"gopls",
@@ -44,6 +45,7 @@ return {
 			lspconfig.clangd.setup({ capabilities = capabilities, filetypes = { "c", "cpp", "objc", "objcpp" } })
 			lspconfig.csharp_ls.setup({ capabilities = capabilities })
 			lspconfig.jdtls.setup({})
+			lspconfig.pyright.setup({})
 
 			vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, {})
 			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, {})
