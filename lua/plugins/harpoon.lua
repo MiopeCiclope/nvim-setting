@@ -3,42 +3,47 @@ return {
   branch = "harpoon2",
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
+    local get_git_branch = function()
+      local branch = vim.fn
+          .system({
+            "git",
+            "rev-parse",
+            "--abbrev-ref",
+            "HEAD",
+          })
+          :gsub("%s+", "")
+
+      return branch ~= "" and branch or "default"
+    end
+
     local harpoon = require("harpoon")
+
+    local getList = function()
+      return harpoon:list(get_git_branch())
+    end
+
     harpoon:setup({
-      default = {
+      [get_git_branch()] = {
         display = function(list_item)
           local cropped_path, tail = list_item.value:match("^(.*)/(.*)$")
           return string.format("%s - %s/", tail, cropped_path)
         end,
-      }
+      },
     })
 
-    vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+    vim.keymap.set("n", "<leader>hh", function()
+      harpoon.ui:toggle_quick_menu(getList(), { title = "Harpoon - " .. get_git_branch() })
+    end)
 
     vim.keymap.set("n", "<leader>ha", function()
-      harpoon:list():add()
+      getList():add()
     end)
 
-    vim.keymap.set("n", "<leader>1", function()
-      harpoon:list():select(1)
-    end)
-    vim.keymap.set("n", "<leader>2", function()
-      harpoon:list():select(2)
-    end)
-    vim.keymap.set("n", "<leader>3", function()
-      harpoon:list():select(3)
-    end)
-    vim.keymap.set("n", "<leader>4", function()
-      harpoon:list():select(4)
-    end)
-
-    -- Toggle previous & next buffers stored within Harpoon list
-    vim.keymap.set("n", "<leader>hn", function()
-      harpoon:list():prev()
-    end)
-
-    vim.keymap.set("n", "<leader>hm", function()
-      harpoon:list():next()
-    end)
+    -- make quick selection from 1 to 5
+    for i = 1, 5 do
+      vim.keymap.set("n", "<leader>" .. i, function()
+        getList():select(i)
+      end)
+    end
   end,
 }
