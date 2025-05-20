@@ -34,14 +34,34 @@ return {
       local lspconfig = require("lspconfig")
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
+      -- Disable tsserver formatting capabilities
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities,
+        on_attach = function(client)
+          client.server_capabilities.documentFormattingProvider = false
+        end,
+        settings = {
+          typescript = {
+            format = {
+              enable = false,
+            },
+          },
+          javascript = {
+            format = {
+              enable = false,
+            },
+          },
+        },
+      })
 
+      -- Other LSP configs remain the same
       lspconfig.pyright.setup({
         capabilities = capabilities,
         settings = {
           python = {
             analysis = {
-              typeCheckingMode = "strict", -- Keep type checking
-              diagnosticMode = "workspace", -- Reduce noise
+              typeCheckingMode = "strict",
+              diagnosticMode = "workspace",
             },
           },
         },
@@ -52,7 +72,6 @@ return {
         capabilities,
       })
       lspconfig.html.setup({ capabilities = capabilities })
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
       lspconfig.cssls.setup({ capabilities = capabilities })
       lspconfig.gopls.setup({ capabilities = capabilities })
       lspconfig.gradle_ls.setup({ capabilities = capabilities })
@@ -61,19 +80,20 @@ return {
       lspconfig.csharp_ls.setup({ capabilities = capabilities })
       lspconfig.jdtls.setup({})
 
+      -- Keymaps remain the same
       vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, {})
       vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
 
       local dashed_border = {
         { "┌", "FloatBorder" },
-        { "╌", "FloatBorder" }, -- Dashed horizontal line
+        { "╌", "FloatBorder" },
         { "┐", "FloatBorder" },
-        { "┆", "FloatBorder" }, -- Dashed vertical line
+        { "┆", "FloatBorder" },
         { "┘", "FloatBorder" },
-        { "╌", "FloatBorder" }, -- Dashed horizontal line
+        { "╌", "FloatBorder" },
         { "└", "FloatBorder" },
-        { "┆", "FloatBorder" }, -- Dashed vertical line
+        { "┆", "FloatBorder" },
       }
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = dashed_border,
