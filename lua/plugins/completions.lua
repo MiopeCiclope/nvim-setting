@@ -29,18 +29,25 @@ return {
 		"saghen/blink.cmp",
 		version = "*",
 		opts = {
+			cmdline = {
+				keymap = { preset = "inherit" },
+				completion = {
+					menu = {
+						auto_show = function()
+							local type = vim.fn.getcmdtype()
+							if type == "/" or type == "?" then
+								return { "buffer" }
+							end
+							if type == ":" or type == "@" then
+								return { "cmdline" }
+							end
+							return {}
+						end,
+					},
+				},
+			},
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
-				cmdline = function()
-					local type = vim.fn.getcmdtype()
-					if type == "/" or type == "?" then
-						return { "buffer" }
-					end
-					if type == ":" or type == "@" then
-						return { "cmdline" }
-					end
-					return {}
-				end,
 			},
 			completion = {
 				documentation = {
