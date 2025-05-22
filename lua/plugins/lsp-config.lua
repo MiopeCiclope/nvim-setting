@@ -3,7 +3,6 @@ return {
 		"williamboman/mason.nvim",
 		build = ":MasonUpdate",
 		config = true,
-		priority = 1000, -- Ensure this loads first
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
@@ -41,10 +40,23 @@ return {
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 			-- Common on_attach function
-			local on_attach = function(client, bufnr)
-				-- Mappings
-				local opts = { buffer = bufnr }
-				vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, opts)
+			local on_attach = function()
+				local opts = {}
+				-- Custom borders for LSP handlers
+				local dashed_border = {
+					{ "┌", "FloatBorder" },
+					{ "╌", "FloatBorder" },
+					{ "┐", "FloatBorder" },
+					{ "┆", "FloatBorder" },
+					{ "┘", "FloatBorder" },
+					{ "╌", "FloatBorder" },
+					{ "└", "FloatBorder" },
+					{ "┆", "FloatBorder" },
+				}
+
+				vim.keymap.set("n", "<leader>h", function()
+					vim.lsp.buf.hover({ border = dashed_border })
+				end, opts)
 				vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, opts)
 				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 			end
@@ -52,10 +64,7 @@ return {
 			-- LSP servers configuration
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
-				on_attach = function(client)
-					on_attach(client)
-					client.server_capabilities.documentFormattingProvider = false
-				end,
+				on_attach = on_attach,
 				settings = {
 					typescript = {
 						format = {
@@ -116,25 +125,7 @@ return {
 				})
 			end
 
-			-- Custom borders for LSP handlers
-			local dashed_border = {
-				{ "┌", "FloatBorder" },
-				{ "╌", "FloatBorder" },
-				{ "┐", "FloatBorder" },
-				{ "┆", "FloatBorder" },
-				{ "┘", "FloatBorder" },
-				{ "╌", "FloatBorder" },
-				{ "└", "FloatBorder" },
-				{ "┆", "FloatBorder" },
-			}
-
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-				border = dashed_border,
-			})
-
-			vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-				border = dashed_border,
-			})
+			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {})
 		end,
 	},
 	{
