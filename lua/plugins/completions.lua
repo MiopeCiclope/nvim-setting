@@ -53,12 +53,12 @@ return {
 				documentation = {
 					window = {
 						border = "single",
-						winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:None",
+						winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:NONE",
 					},
 				},
 				menu = {
 					border = "single",
-					winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:None",
+					winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLineBlink,Search:NONE,PmenuExtra:Pmenu",
 					draw = {
 						columns = function(ctx)
 							if ctx.mode == "cmdline" then
@@ -87,7 +87,7 @@ return {
 				enabled = true,
 				window = {
 					border = "single",
-					winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:None",
+					winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:NONE",
 				},
 			},
 		},

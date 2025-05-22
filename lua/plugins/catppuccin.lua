@@ -13,7 +13,7 @@ return {
 		-- current line number
 		vim.cmd([[highlight CursorLineNr guifg=yellow]])
 
-		-- cursor line higlight
+		-- cursor line highlight
 		vim.cmd([[highlight CursorLine cterm=NONE guibg=#385f54]])
 
 		-- make selection become same color as cursor line
@@ -31,5 +31,6 @@ return {
 		-- menu suggestion selection color
 		vim.cmd([[highlight PmenuSel guibg=#45475a guifg=#ffffff]])
 		vim.cmd([[highlight Pmenu guibg=NONE guifg=#ffffff]])
+		vim.cmd([[highlight CursorLineBlink guifg=#00FF00 guibg=#385f54]])
 	end,
 }
