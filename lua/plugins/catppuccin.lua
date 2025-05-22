@@ -5,7 +5,7 @@ return {
 	config = function()
 		vim.cmd("colorscheme catppuccin-mocha")
 		vim.cmd([[highlight NormalNC guibg=#1c1c1c]])
-		vim.cmd([[highlight Normal guibg=#1c1c1c]])
+		vim.cmd([[highlight Normal guibg=#1c1c1c guifg=#ffffff]])
 
 		-- line number color
 		vim.cmd([[highlight LineNr guifg=white]])
@@ -21,7 +21,6 @@ return {
 
 		-- window separator color
 		vim.cmd([[highlight WinSeparator guifg=white]])
-
 		-- comment font color
 		vim.cmd([[highlight Comment      guifg=#B1C4DE]])
 
@@ -31,5 +30,6 @@ return {
 
 		-- menu suggestion selection color
 		vim.cmd([[highlight PmenuSel guibg=#45475a guifg=#ffffff]])
+		vim.cmd([[highlight Pmenu guibg=NONE guifg=#ffffff]])
 	end,
 }
