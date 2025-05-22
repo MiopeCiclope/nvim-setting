@@ -29,6 +29,16 @@ return {
 				alias_format = "%B %-d, %Y",
 				template = nil,
 			},
+			ui = {
+				enable = true, -- set to false to disable all additional syntax features
+				checkboxes = {
+					[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+					["x"] = { char = "✔", hl_group = "ObsidianDone" },
+					[">"] = { char = "", hl_group = "ObsidianRightArrow" },
+					["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
+					["!"] = { char = "", hl_group = "ObsidianImportant" },
+				},
+			},
 		})
 		vim.keymap.set("n", "<leader>oa", "<cmd>ObsidianTomorrow<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>oo", "<cmd>ObsidianYesterday<CR>", { noremap = false })
