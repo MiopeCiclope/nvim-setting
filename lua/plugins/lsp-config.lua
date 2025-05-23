@@ -97,17 +97,25 @@ return {
 				on_attach = on_attach,
 				settings = {
 					Lua = {
+						runtime = {
+							version = "LuaJIT", -- Tell lua_ls you're using LuaJIT (Neovim's runtime)
+						},
 						diagnostics = {
-							globals = { "vim" },
+							globals = { "vim" }, -- Tell lua_ls that 'vim' is a global
 						},
 						workspace = {
+							library = {
+								[vim.env.VIMRUNTIME] = true,
+								-- vim.api.nvim_get_runtime_file("", true),
+							},
+							-- Prevent the server from suggesting third-party Lua modules
 							checkThirdParty = false,
 						},
+						telemetry = { enable = false },
 					},
 				},
 			})
 
-			-- Other LSP configurations
 			local servers = {
 				"html",
 				"cssls",
