@@ -8,10 +8,14 @@ return {
 
 		null_ls.setup({
 			sources = {
+				-- JS/TS
 				require("none-ls.diagnostics.eslint_d"),
 				require("none-ls.formatting.eslint_d"),
 
+				-- Lua
 				null_ls.builtins.formatting.stylua,
+
+				-- Protobuf
 				null_ls.builtins.diagnostics.buf.with({
 					command = "buf",
 					args = { "lint", "--path", "$FILENAME" },
@@ -22,6 +26,9 @@ return {
 					args = { "format", "-w", "$FILENAME" },
 					filetypes = { "proto" },
 				}),
+
+				-- Python
+				null_ls.builtins.formatting.black,
 			},
 		})
 
