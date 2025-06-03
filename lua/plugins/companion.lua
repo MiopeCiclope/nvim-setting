@@ -1,6 +1,11 @@
 local DEFAULT_MODEL = "deepseek-coder-v2:latest"
 -- local DEFAULT_MODEL = "codestral"
 
+local defaultSetting = {
+	adapter = "ollama",
+	model = DEFAULT_MODEL,
+}
+
 return {
 	"olimorris/codecompanion.nvim",
 	opts = {
@@ -31,14 +36,8 @@ return {
 					},
 				},
 			},
-			inline = {
-				adapter = "ollama",
-				model = DEFAULT_MODEL, -- Use the default model here
-			},
-			agent = {
-				adapter = "ollama",
-				model = DEFAULT_MODEL, -- Use the default model here
-			},
+			inline = defaultSetting,
+			agent = defaultSetting,
 		},
 	},
 }

@@ -81,7 +81,10 @@ return {
 
 			lspconfig.pyright.setup({
 				capabilities = capabilities,
-				on_attach = on_attach,
+				on_attach = function(client)
+					on_attach() -- call your existing on_attach
+					client.server_capabilities.documentFormattingProvider = false -- Pyright doesn't format
+				end,
 				settings = {
 					python = {
 						analysis = {

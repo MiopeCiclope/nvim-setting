@@ -31,7 +31,7 @@ return {
 		-- menu suggestion selection color
 		vim.cmd([[highlight PmenuSel guibg=#45475a guifg=#ffffff]])
 		vim.cmd([[highlight Pmenu guibg=NONE guifg=#ffffff]])
-		vim.cmd([[highlight CursorLineBlink guifg=#00FF00 guibg=#385f54]])
-		vim.cmd([[highlight NonText guifg=#FF8800 ]])
+		vim.cmd([[highlight CursorLineBlink guifg=#FF8800 guibg=#385f54]])
+		vim.cmd([[highlight NonText guifg=#CCAA00 ]])
 	end,
 }
