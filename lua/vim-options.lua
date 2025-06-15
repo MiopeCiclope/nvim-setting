@@ -19,7 +19,8 @@ vim.cmd("autocmd InsertEnter * norm zz")
 vim.cmd("autocmd BufWritePre * %s/\\s\\+$//e")
 
 -- disable signcolumn
-vim.cmd("set signcolumn=no")
+-- vim.cmd("set signcolumn=no")
+vim.cmd("set signcolumn=yes")
 
 vim.g.mapleader = " "
 

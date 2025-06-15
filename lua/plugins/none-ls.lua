@@ -6,11 +6,24 @@ return {
 	config = function()
 		local null_ls = require("null-ls")
 
+		local rustfmt = {
+			method = null_ls.methods.FORMATTING,
+			filetypes = { "rust" },
+			generator = null_ls.formatter({
+				command = "rustfmt",
+				args = { "--emit=stdout" },
+				to_stdin = true,
+			}),
+		}
+
 		null_ls.setup({
 			sources = {
 				-- JS/TS
 				require("none-ls.diagnostics.eslint_d"),
 				require("none-ls.formatting.eslint_d"),
+
+				-- Rust
+				rustfmt,
 
 				-- Lua
 				null_ls.builtins.formatting.stylua,
