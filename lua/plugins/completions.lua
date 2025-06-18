@@ -48,6 +48,16 @@ return {
 			},
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
+				-- default = { "llm" },
+				-- providers = {
+				-- 	llm = {
+				-- 		name = "llm",
+				-- 		module = "llm.common.completion.frontends.blink", -- Required for blink.cmp
+				-- 		timeout_ms = 10000, -- Adjust based on model speed
+				-- 		score_offset = 100, -- Higher = AI suggestions appear first
+				-- 		async = true, -- Non-blocking
+				-- 	},
+				-- },
 			},
 			completion = {
 				documentation = {
