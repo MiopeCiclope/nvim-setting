@@ -51,15 +51,6 @@ local function setup_jdtls()
 	}
 
 	local lsp_capabilities = require("blink.cmp").get_lsp_capabilities()
-	-- Add incremental sync capabilities
-	lsp_capabilities.textDocument = lsp_capabilities.textDocument or {}
-	lsp_capabilities.textDocument.synchronization = {
-		dynamicRegistration = false,
-		willSave = true,
-		willSaveWaitUntil = true,
-		didSave = true,
-	}
-
 	for k, v in pairs(lsp_capabilities) do
 		capabilities[k] = v
 	end
@@ -73,14 +64,8 @@ local function setup_jdtls()
 	local cmd = {
 		"java",
 		"-Xmx12g",
-		"-XX:MaxMetaspaceSize=1g", -- Increase Metaspace size
 		"-XX:ReservedCodeCacheSize=512m",
-		"-XX:+UseG1GC", -- Use G1 Garbage Collector for better performance
-		"-XX:+UseStringDeduplication", -- Deduplicate strings to save memory
 		"-XX:CICompilerCount=7", -- Limit JIT compiler threads (adjust based on CPU cores)
-		"-Dlog.level=WARN", -- Reduce logging level to avoid unnecessary output
-		"-Dfile.encoding=UTF-8",
-		"-javaagent:" .. lombok,
 		"-jar",
 		launcher,
 		"-configuration",
@@ -92,30 +77,27 @@ local function setup_jdtls()
 	-- Configure settings in the JDTLS server
 	local settings = {
 		java = {
-			-- Enable code formatting
+			configuration = {
+				runtimes = {
+					{
+						name = "Java21",
+						path = "/Library/Java/JavaVirtualMachines/jdk-21.jdk",
+						default = true,
+					},
+				},
+			},
 			format = {
 				enabled = true,
-				-- Use the Google Style guide for code formattingh
 				settings = {
 					url = vim.fn.stdpath("config") .. "/lang_servers/intellij-java-google-style.xml",
 					profile = "GoogleStyle",
 				},
 			},
-			-- Enable downloading archives from eclipse automatically
-			eclipse = {
-				downloadSource = true,
+			references = {
+				includeDecompiledSources = false,
 			},
-			-- Enable downloading archives from maven automatically
-			maven = {
-				downloadSources = true,
-			},
-			-- Enable method signature help
-			signatureHelp = {
-				enabled = true,
-			},
-			-- Use the fernflower decompiler when using the javap command to decompile byte code back to java code
-			contentProvider = {
-				preferred = "fernflower",
+			implementationsCodeLens = {
+				enabled = false,
 			},
 			imports = {
 				exclusions = {
@@ -127,82 +109,13 @@ local function setup_jdtls()
 					"**/META-INF/**",
 				},
 			},
-			-- Setup automatical package import oranization on file save
-			saveActions = {
-				organizeImports = true,
-			},
-			-- Customize completion options
-			completion = {
-				-- When using an unimported static method, how should the LSP rank possible places to import the static method from
-				favoriteStaticMembers = {
-					"org.hamcrest.MatcherAssert.assertThat",
-					"org.hamcrest.Matchers.*",
-					"org.hamcrest.CoreMatchers.*",
-					"org.junit.jupiter.api.Assertions.*",
-					"java.util.Objects.requireNonNull",
-					"java.util.Objects.requireNonNullElse",
-					"org.mockito.Mockito.*",
-				},
-				-- Try not to suggest imports from these packages in the code action window
-				filteredTypes = {
-					"com.sun.*",
-					"io.micrometer.shaded.*",
-					"java.awt.*",
-					"jdk.*",
-					"sun.*",
-				},
-				-- Set the order in which the language server should organize imports
-				importOrder = {
-					"java",
-					"jakarta",
-					"javax",
-					"com",
-					"org",
-				},
-			},
-			sources = {
-				-- How many classes from a specific package should be imported before automatic imports combine them all into a single import
-				organizeImports = {
-					starThreshold = 9999,
-					staticThreshold = 9999,
-				},
-			},
-			-- How should different pieces of code be generated?
-			codeGeneration = {
-				-- When generating toString use a json format
-				toString = {
-					template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
-				},
-				-- When generating hashCode and equals methods use the java 7 objects method
-				hashCodeEquals = {
-					useJava7Objects = true,
-				},
-				-- When generating code use code blocks
-				useBlocks = true,
-			},
-			-- If changes to the project will require the developer to update the projects configuration advise the developer before accepting the change
-			configuration = {
-				updateBuildConfiguration = "interactive",
-			},
-			-- enable code lens in the lsp
-			referencesCodeLens = {
-				enabled = false,
-			},
-			-- enable inlay hints for parameter names,
-			inlayHints = {
-				parameterNames = {
-					enabled = "none",
-				},
-			},
 		},
 	}
 
-	-- Create a table called init_options to pass the bundles with debug and testing jar, along with the extended client capablies to the start or attach function of JDTLS
 	local init_options = {
 		extendedClientCapabilities = extendedClientCapabilities,
 	}
 
-	-- Function that will be ran once the language server is attached
 	local on_attach = function(_, bufnr)
 		require("jdtls.setup").add_commands()
 		vim.lsp.codelens.refresh()
