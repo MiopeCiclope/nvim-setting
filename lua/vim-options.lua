@@ -54,7 +54,7 @@ vim.keymap.set("n", '<leader>"', ":split<CR>", { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>l", "<Cmd>noh<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("n", "<C-x>", ":Explore<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<leader>:", ":CodeCompanionChat<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<leader>:", ":CodeCompanionChat<CR>", { noremap = true, silent = true })
 
 vim.diagnostic.config({
 	virtual_text = true,
