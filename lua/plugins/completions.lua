@@ -27,6 +27,7 @@ return {
 	},
 	{
 		"saghen/blink.cmp",
+		dependencies = { "Kurama622/llm.nvim" },
 		version = "*",
 		opts = {
 			cmdline = {
@@ -47,17 +48,16 @@ return {
 				},
 			},
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
-				-- default = { "llm" },
-				-- providers = {
-				-- 	llm = {
-				-- 		name = "llm",
-				-- 		module = "llm.common.completion.frontends.blink", -- Required for blink.cmp
-				-- 		timeout_ms = 10000, -- Adjust based on model speed
-				-- 		score_offset = 100, -- Higher = AI suggestions appear first
-				-- 		async = true, -- Non-blocking
-				-- 	},
-				-- },
+				default = { "llm", "lsp", "path", "snippets", "buffer" },
+				providers = {
+					llm = {
+						name = "llm",
+						module = "llm.common.completion.frontends.blink",
+						timeout_ms = 10000,
+						score_offset = 100,
+						async = true,
+					},
+				},
 			},
 			completion = {
 				documentation = {
@@ -72,6 +72,24 @@ return {
 					border = "single",
 					winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLineBlink,Search:NONE,PmenuExtra:Pmenu",
 					draw = {
+						components = {
+							kind_icon = {
+								text = function(ctx)
+									if ctx.item.kind_name == "llm" then
+										return " "
+									else
+										return ctx.kind_icon
+									end
+								end,
+								highlight = function(ctx)
+									if ctx.item.kind_name == "llm" then
+										return "BlinkCmpKindSnippet"
+									else
+										return ctx.kind_hl
+									end
+								end,
+							},
+						},
 						columns = function(ctx)
 							if ctx.mode == "cmdline" then
 								return { { "label" } }
