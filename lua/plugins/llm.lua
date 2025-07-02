@@ -11,7 +11,7 @@ return {
 				url = "http://localhost:11434/api/chat",
 				model = "deepseek-coder-v2",
 				api_type = "ollama",
-				style = "right",
+				style = "left",
 				keys = {
 					["Input:Submit"] = { mode = "n", key = "<cr>" },
 					["Input:Cancel"] = { mode = { "n", "i" }, key = "<C-c>" },
@@ -126,7 +126,7 @@ return {
 			{
 				"<leader>tt",
 				mode = "v",
-				"<cmd>LLMSelectedTextHandler give me the english translation of this text, no explanation, just the text <cr>",
+				"<cmd>LLMSelectedTextHandler give me the swedish translation of this text, no explanation, just the text in english<cr>",
 			},
 		},
 	},

@@ -98,4 +98,8 @@ local mappings = {
 }
 
 setupTagCompletion(mappings)
+
+vim.api.nvim_create_user_command("W", function()
+	vim.cmd("write")
+end, {})
 --#endregion
