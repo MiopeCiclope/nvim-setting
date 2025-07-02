@@ -25,7 +25,6 @@ local function get_workspace()
 end
 
 local function setup_jdtls()
-	print("in")
 	-- Get access to the jdtls plugin and all of its functionality
 	local jdtls = require("jdtls")
 
