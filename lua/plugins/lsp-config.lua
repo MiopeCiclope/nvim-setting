@@ -5,9 +5,6 @@ return {
 		config = true,
 	},
 	{
-		"mfussenegger/nvim-jdtls",
-	},
-	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"williamboman/mason-lspconfig.nvim",
@@ -87,8 +84,6 @@ return {
 					},
 				},
 			})
-
-			lspconfig.jdtls.setup({})
 
 			local servers = {
 				"html",

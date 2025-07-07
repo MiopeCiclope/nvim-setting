@@ -18,13 +18,6 @@ vim.cmd("autocmd InsertEnter * norm zz")
 -- Remove trailing white space
 vim.cmd("autocmd BufWritePre * %s/\\s\\+$//e")
 
-vim.cmd([[
-    augroup jdtls_lsp
-        autocmd!
-        autocmd FileType java lua require'config.jdtls'.setup_jdtls()
-    augroup end
-]])
-
 -- disable signcolumn
 -- vim.cmd("set signcolumn=no")
 vim.cmd("set signcolumn=yes")
