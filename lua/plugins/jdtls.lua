@@ -1,45 +1,44 @@
 return {
 	"mfussenegger/nvim-jdtls",
 	ft = { "java" },
-	enable = false,
 	config = function()
-		local jdtls = require("jdtls")
-
-		local home = vim.fn.expand("~")
 		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-		-- local workspace_dir = home .. "/.local/share/eclipse/" .. project_name
-
-		local workspace_dir = home .. "/.local/share/jdtls-workspace/" .. project_name
-
-		local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
-		local root_dir = require("jdtls.setup").find_root(root_markers)
-		if not root_dir then
-			print("⚠️ No valid Java project root found.")
-			return
-		end
-
+		local workspace_dir = "/Users/romulotone/.local/share/jdtls-workspace/" .. project_name
 		local config = {
-			cmd = { "jdtls", "-data", workspace_dir },
-			root_dir = root_dir,
-			settings = {
-				java = {
-					configuration = {
-						updateBuildConfiguration = "interactive", -- ask when needed
-					},
-					project = {
-						referencedLibraries = {
-							"build/libs/**/*.jar",
-							"lib/**/*.jar",
-						},
-					},
-				},
+			cmd = {
+				"/Users/romulotone/.jenv/versions/21.0.4/bin/java",
+				"-Declipse.application=org.eclipse.jdt.ls.core.id1",
+				"-Dosgi.bundles.defaultStartLevel=4",
+				"-Declipse.product=org.eclipse.jdt.ls.core.product",
+				"-Dlog.protocol=true",
+				"-Dlog.level=ALL",
+				"--add-modules=ALL-SYSTEM",
+				"--add-opens",
+				"java.base/java.util=ALL-UNNAMED",
+				"--add-opens",
+				"java.base/java.lang=ALL-UNNAMED",
+				"-jar",
+				"/Users/romulotone/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.7.0.v20250331-1702.jar",
+				"-configuration",
+				"/Users/romulotone/.local/share/nvim/mason/packages/jdtls/config_mac_arm",
+				"-data",
+				workspace_dir,
+				"-Xmx12g",
+				"-XX:ReservedCodeCacheSize=512m",
+				"--XX:CICompilerCount=7",
 			},
-			on_attach = function(client, bufnr)
-				print("✅ JDTLS attached to buffer " .. bufnr)
-				require("jdtls.setup").add_commands()
-			end,
+
+			root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+
+			settings = {
+				java = {},
+			},
+
+			init_options = {
+				bundles = {},
+			},
 		}
 
-		jdtls.start_or_attach(config)
+		require("jdtls").start_or_attach(config)
 	end,
 }

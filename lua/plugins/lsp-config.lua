@@ -13,10 +13,6 @@ return {
 			local lspconfig = require("lspconfig")
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			lspconfig.jdtls.setup = {
-				capabilities = capabilities,
-			}
-
 			-- LSP servers configuration
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
