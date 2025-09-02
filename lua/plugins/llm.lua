@@ -104,7 +104,7 @@ return {
 							style = "blink.cmp",
 							timeout = 10,
 							throttle = 1000,
-							debounce = 400,
+							debounce = 600,
 							keymap = {
 								toggle = {
 									mode = "n",
