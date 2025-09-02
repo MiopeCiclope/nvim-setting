@@ -103,3 +103,46 @@ vim.api.nvim_create_user_command("W", function()
 	vim.cmd("write")
 end, {})
 --#endregion
+
+--#region StatusLine
+vim.opt.statusline = table.concat({
+	-- ... suas outras configurações ...
+	"%{luaeval('require(\"statusline\").diagnostics()')}", -- Chama uma função customizada
+	-- ... resto da statusline ...
+})
+
+-- Crie um arquivo `lua/statusline.lua` ou adicione isto no seu init.lua:
+_G.get_diagnostics = function()
+	if not next(vim.lsp.get_active_clients({ bufnr = 0 })) then
+		return "" -- Retorna vazio se não houver LSP ativo
+	end
+
+	local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+	local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+	local hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+	local info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+
+	local diagnostics = ""
+	if errors > 0 then
+		diagnostics = diagnostics .. "  " .. errors
+	end
+	if warnings > 0 then
+		diagnostics = diagnostics .. "  " .. warnings
+	end
+	if hints > 0 then
+		diagnostics = diagnostics .. " 󰌶 " .. hints
+	end
+	if info > 0 then
+		diagnostics = diagnostics .. "  " .. info
+	end
+
+	return diagnostics
+end
+
+-- Configurar a statusline nativa
+vim.opt.statusline = table.concat({
+	"%{v:lua.get_diagnostics()} ", -- Diagnósticos alinhados à direita
+	"%f", -- Nome do arquivo
+	" %m", -- Modificado flag
+	" %=%=%l:%c ", -- Linha e coluna alinhados à direita
+}) --#endregion
