@@ -105,15 +105,9 @@ end, {})
 --#endregion
 
 --#region StatusLine
-vim.opt.statusline = table.concat({
-	-- ... suas outras configurações ...
-	"%{luaeval('require(\"statusline\").diagnostics()')}", -- Chama uma função customizada
-	-- ... resto da statusline ...
-})
-
--- Crie um arquivo `lua/statusline.lua` ou adicione isto no seu init.lua:
 _G.get_diagnostics = function()
-	if not next(vim.lsp.get_active_clients({ bufnr = 0 })) then
+  if not next(vim.lsp.get_clients({ bufnr = 0 })) then
+	-- if not next(vim.lsp.get_active_clients({ bufnr = 0 })) then
 		return "" -- Retorna vazio se não houver LSP ativo
 	end
 
@@ -139,10 +133,31 @@ _G.get_diagnostics = function()
 	return diagnostics
 end
 
--- Configurar a statusline nativa
+-- Add this to your configuration
+vim.g.show_full_path = false
+
+function _G.get_dynamic_filename()
+	if vim.g.show_full_path then
+		return vim.fn.expand("%:f") -- Full path
+	else
+		return vim.fn.expand("%:t") -- Just filename
+	end
+end
+
+-- Update your statusline
 vim.opt.statusline = table.concat({
-	"%{v:lua.get_diagnostics()} ", -- Diagnósticos alinhados à direita
-	"%f", -- Nome do arquivo
+	"%{v:lua.get_dynamic_filename()}", -- Dynamic filename
 	" %m", -- Modificado flag
+	" %{v:lua.get_diagnostics()} ", -- Diagnósticos
 	" %=%=%l:%c ", -- Linha e coluna alinhados à direita
-}) --#endregion
+})
+
+-- Toggle command
+vim.api.nvim_create_user_command("ToggleFullPath", function()
+	vim.g.show_full_path = not vim.g.show_full_path
+	-- Force redraw of statusline
+	vim.cmd("redrawstatus")
+	print("Full path: " .. (vim.g.show_full_path and "ON" or "OFF"))
+end, {})
+
+--#endregion
