@@ -68,6 +68,10 @@ function! FileSearch()
     call setqflist(qf_list)
     copen
     call SetupQuickfixMappings()
+
+    redraw
+    call feedkeys(":/", "n")
+    "call timer_start(50, {-> feedkeys("/")})
 endfunction
 
 " Grep search mapping
