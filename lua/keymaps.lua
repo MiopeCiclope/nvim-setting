@@ -34,7 +34,6 @@ end, opts)
 -- Search inside visual selection
 map("x", "/", ":<C-u>/\\%V", opts)
 
--- tests
 vim.cmd([[
 " Ctrl+B for buffer search
 nnoremap <Leader>b :call BufferSearch()<CR>
@@ -45,15 +44,32 @@ function! BufferSearch()
         if buflisted(i) && bufexists(i)
             let name = bufname(i)
             if name != '' && name !~ '^term://'
-                call add(buffers, {'filename': name, 'bufnr': i})
+                " Create proper quickfix entries with line number 1
+                call add(buffers, {'filename': name, 'lnum': 1, 'text': name})
             endif
         endif
     endfor
 
     call setqflist(buffers)
-    call SetupQuickfixMappings()
     copen
+    call SetupQuickfixMappings()
 endfunction
+
+" Ctrl+P for file search
+nnoremap <C-p> :call FileSearch()<CR>
+
+function! FileSearch()
+    let files = systemlist('git ls-files')
+    let qf_list = []
+    for file in files
+        " Create proper quickfix entries with line number 1
+        call add(qf_list, {'filename': file, 'lnum': 1, 'text': file})
+    endfor
+    call setqflist(qf_list)
+    copen
+    call SetupQuickfixMappings()
+endfunction
+
 " Grep search mapping
 nnoremap <Leader>z :call FileGrep()<CR>
 
@@ -63,24 +79,16 @@ function! FileGrep()
         return
     endif
 
+
     execute "vimgrep /" . pattern . "/j **"
-    call SetupQuickfixMappings()
     copen
-endfunction
-
-" Ctrl+P for file search
-nnoremap <C-p> :call FileSearch()<CR>
-
-function! FileSearch()
-    call setqflist(map(systemlist('git ls-files'), {_, val -> {'filename': val}}))
     call SetupQuickfixMappings()
-    copen
 endfunction
 
 function! SetupQuickfixMappings()
     " Set up mappings for quickfix window
     nnoremap <buffer> <CR> <CR>:cclose<CR>
-    nnoremap <buffer> <Leader>l :call OpenInMainWindow()<CR>
+    nnoremap <buffer> <Leader>g :call OpenInMainWindow()<CR>
 endfunction
 
 function! OpenInMainWindow()
