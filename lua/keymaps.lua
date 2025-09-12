@@ -34,46 +34,11 @@ end, opts)
 -- Search inside visual selection
 map("x", "/", ":<C-u>/\\%V", opts)
 
+-- Key mappings
+vim.keymap.set("n", "<C-p>", '<cmd>lua require("fzf").git_files()<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>b", '<cmd>lua require("fzf").buffers()<CR>', { noremap = true, silent = true })
+
 vim.cmd([[
-" Ctrl+B for buffer search
-nnoremap <Leader>b :call BufferSearch()<CR>
-
-function! BufferSearch()
-    let buffers = []
-    for i in range(1, bufnr('$'))
-        if buflisted(i) && bufexists(i)
-            let name = bufname(i)
-            if name != '' && name !~ '^term://'
-                " Create proper quickfix entries with line number 1
-                call add(buffers, {'filename': name, 'lnum': 1, 'text': name})
-            endif
-        endif
-    endfor
-
-    call setqflist(buffers)
-    copen
-    call SetupQuickfixMappings()
-endfunction
-
-" Ctrl+P for file search
-nnoremap <C-p> :call FileSearch()<CR>
-
-function! FileSearch()
-    let files = systemlist('git ls-files')
-    let qf_list = []
-    for file in files
-        " Create proper quickfix entries with line number 1
-        call add(qf_list, {'filename': file, 'lnum': 1, 'text': file})
-    endfor
-    call setqflist(qf_list)
-    copen
-    call SetupQuickfixMappings()
-
-    redraw
-    call feedkeys(":/", "n")
-    "call timer_start(50, {-> feedkeys("/")})
-endfunction
-
 " Grep search mapping
 nnoremap <Leader>z :call FileGrep()<CR>
 
