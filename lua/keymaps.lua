@@ -36,6 +36,25 @@ map("x", "/", ":<C-u>/\\%V", opts)
 
 -- tests
 vim.cmd([[
+" Ctrl+B for buffer search
+nnoremap <Leader>b :call BufferSearch()<CR>
+
+function! BufferSearch()
+    let buffers = []
+    for i in range(1, bufnr('$'))
+        if buflisted(i) && bufexists(i)
+            let name = bufname(i)
+            if name != '' && name !~ '^term://'
+                call add(buffers, {'filename': name, 'bufnr': i})
+            endif
+        endif
+    endfor
+
+    call setqflist(buffers)
+    call SetupQuickfixMappings()
+    copen
+endfunction
+" Grep search mapping
 nnoremap <Leader>z :call FileGrep()<CR>
 
 function! FileGrep()
@@ -45,12 +64,23 @@ function! FileGrep()
     endif
 
     execute "vimgrep /" . pattern . "/j **"
+    call SetupQuickfixMappings()
     copen
+endfunction
 
-    " Enter opens file and closes quickfix
+" Ctrl+P for file search
+nnoremap <C-p> :call FileSearch()<CR>
+
+function! FileSearch()
+    call setqflist(map(systemlist('git ls-files'), {_, val -> {'filename': val}}))
+    call SetupQuickfixMappings()
+    copen
+endfunction
+
+function! SetupQuickfixMappings()
+    " Set up mappings for quickfix window
     nnoremap <buffer> <CR> <CR>:cclose<CR>
-
-    nnoremap <buffer> <Leader>g :call OpenInMainWindow()<CR>
+    nnoremap <buffer> <Leader>l :call OpenInMainWindow()<CR>
 endfunction
 
 function! OpenInMainWindow()
@@ -67,11 +97,3 @@ function! OpenInMainWindow()
     execute "normal! " . current_line . "G"
 endfunction
 ]])
-
--- vim.cmd('command! FzfFiles execute "cexpr system(\\"git ls-files\\")" | copen')
-vim.cmd([[
-command! FzfFiles call setqflist(map(systemlist('git ls-files'), {_, val -> {'filename': val}})) | copen
-]])
--- vim.cmd([[
--- command! FzfFiles execute 'edit ' . system('git ls-files | fzf --multi --preview "bat --color=always {}" | head -1')
--- ]])
