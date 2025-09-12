@@ -36,7 +36,7 @@ map("x", "/", ":<C-u>/\\%V", opts)
 
 -- tests
 vim.cmd([[
-nnoremap <C-p> :call FileGrep()<CR>
+nnoremap <Leader>z :call FileGrep()<CR>
 
 function! FileGrep()
     let pattern = input("Grep Search: ")
@@ -50,7 +50,6 @@ function! FileGrep()
     " Enter opens file and closes quickfix
     nnoremap <buffer> <CR> <CR>:cclose<CR>
 
-    " Leader+space opens file in main window but keeps quickfix open
     nnoremap <buffer> <Leader>g :call OpenInMainWindow()<CR>
 endfunction
 
@@ -68,3 +67,11 @@ function! OpenInMainWindow()
     execute "normal! " . current_line . "G"
 endfunction
 ]])
+
+-- vim.cmd('command! FzfFiles execute "cexpr system(\\"git ls-files\\")" | copen')
+vim.cmd([[
+command! FzfFiles call setqflist(map(systemlist('git ls-files'), {_, val -> {'filename': val}})) | copen
+]])
+-- vim.cmd([[
+-- command! FzfFiles execute 'edit ' . system('git ls-files | fzf --multi --preview "bat --color=always {}" | head -1')
+-- ]])
