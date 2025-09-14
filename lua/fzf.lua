@@ -1,3 +1,4 @@
+local utils = require("utils")
 local M = {}
 
 -- Create a unique temporary file for fzf selection
@@ -26,6 +27,10 @@ end
 
 -- Main fzf function for git files
 function M.git_files()
+	if not utils.check_dependencies() then
+		return
+	end
+
 	if not is_git_repo() then
 		print("Not a git repository")
 		return
@@ -46,7 +51,7 @@ function M.git_files()
 	})
 
 	-- Build fzf command with preview
-	local fzf_cmd = "git ls-files | fzf --height 100% --border --preview 'bat --color=always --style=numbers --line-range :500 {}' > "
+	local fzf_cmd = "git ls-files | fzf --height 100% --preview 'bat --color=always --style=numbers --line-range :500 {}' > "
 		.. temp_file
 
 	vim.fn.termopen(fzf_cmd, {
@@ -142,8 +147,30 @@ function M.buffers()
 		border = "rounded",
 	})
 
-	local fzf_cmd = "ls -1 | fzf --height 100% --border --preview 'bat --color=always --style=numbers --line-range :500 {}' > "
-		.. temp_file
+	-- Get list of open buffers with better formatting
+	local buffers = {}
+	for i = 1, vim.fn.bufnr("$") do
+		if vim.fn.buflisted(i) == 1 and vim.fn.bufexists(i) == 1 then
+			local buf_name = vim.fn.bufname(i)
+			if buf_name ~= "" then
+				table.insert(buffers, buf_name)
+			end
+		end
+	end
+
+	if #buffers == 0 then
+		print("No buffers available")
+		vim.api.nvim_win_close(win, true)
+		return
+	end
+
+	-- Create the fzf command with buffer list as input
+	local buffers_input = table.concat(buffers, "\n")
+	local fzf_cmd = string.format(
+		"echo %s | fzf --height 100%% --border --preview 'bat --color=always --style=numbers --line-range :500 {}' > %s",
+		vim.fn.shellescape(buffers_input),
+		temp_file
+	)
 
 	vim.fn.termopen(fzf_cmd, {
 		on_exit = function(_, code, _)
