@@ -35,42 +35,6 @@ end, opts)
 map("x", "/", ":<C-u>/\\%V", opts)
 
 -- Key mappings
-vim.keymap.set("n", "<C-p>", '<cmd>lua require("fzf").git_files()<CR>', { noremap = true, silent = true })
-vim.keymap.set("n", "<Leader>b", '<cmd>lua require("fzf").buffers()<CR>', { noremap = true, silent = true })
-
-vim.cmd([[
-" Grep search mapping
-nnoremap <Leader>z :call FileGrep()<CR>
-
-function! FileGrep()
-    let pattern = input("Grep Search: ")
-    if pattern == ""
-        return
-    endif
-
-
-    execute "vimgrep /" . pattern . "/j **"
-    copen
-    call SetupQuickfixMappings()
-endfunction
-
-function! SetupQuickfixMappings()
-    " Set up mappings for quickfix window
-    nnoremap <buffer> <CR> <CR>:cclose<CR>
-    nnoremap <buffer> <Leader>g :call OpenInMainWindow()<CR>
-endfunction
-
-function! OpenInMainWindow()
-    " Save current quickfix position
-    let current_line = line('.')
-
-    " Open the file in the main window
-    execute "normal! \<CR>"
-
-    " Return focus to quickfix window
-    wincmd p
-
-    " Restore cursor position in quickfix
-    execute "normal! " . current_line . "G"
-endfunction
-]])
+map("n", "<C-p>", '<cmd>lua require("fzf").git_files()<CR>', { noremap = true, silent = true })
+map("n", "<Leader>b", '<cmd>lua require("fzf").buffers()<CR>', { noremap = true, silent = true })
+map("n", "<Leader>z", '<cmd>lua require("fzf").grep_search()<CR>', { noremap = true, silent = true })

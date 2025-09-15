@@ -1,10 +1,15 @@
 local utils = require("utils")
 local M = {}
 
-M.PREVIEW_COMMAND = "bat --color=always --style=numbers --line-range :500 {}"
+M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {}'"
+M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border"
 
-function M.open_file(selected_file)
+function M.open_file(selected_file, line_number)
 	vim.cmd("edit " .. vim.fn.fnameescape(selected_file))
+
+	if line_number ~= nil then
+		vim.cmd(":" .. line_number)
+	end
 end
 
 -- Main fzf function for git files
@@ -18,7 +23,7 @@ function M.git_files()
 		return
 	end
 
-	M.fzf_command("git ls-files")
+	M.fzf_command("git ls-files" .. M.FZF_COMMAND .. M.PREVIEW_COMMAND)
 end
 
 -- Buffer search using fzf
@@ -37,21 +42,48 @@ function M.buffers()
 
 	-- Create the fzf command with buffer list as input
 	local buffers_input = table.concat(buffers, "\n")
-	local fzf_cmd = string.format("echo %s", vim.fn.shellescape(buffers_input))
+	local fzf_cmd = string.format("echo %s ", vim.fn.shellescape(buffers_input)) .. M.FZF_COMMAND .. M.PREVIEW_COMMAND
 
 	M.fzf_command(fzf_cmd)
 end
 
-function M.fzf_command(cmd, preview_cmd, callback)
+function M.grep_search()
+	if not utils.check_dependencies() then
+		return
+	end
+
+	if not utils.is_git_repo() then
+		print("Not a git repository")
+		return
+	end
+
+	local pattern = vim.fn.input("Grep Search: ")
+	if pattern == "" or pattern == nil then
+		return
+	end
+
+	local fzf_cmd = "git grep -i --line-number --color=always "
+		.. pattern
+		.. M.FZF_COMMAND
+		.. " --delimiter=':' --preview 'bat --style=numbers --color=always --highlight-line {2} --line-range {2}:+20 {1}'"
+
+	print(fzf_cmd)
+	M.fzf_command(fzf_cmd, function(selected)
+		local parts = vim.split(selected, ":", { plain = true })
+
+		local filename = parts[1]
+		local line_number = parts[2]
+
+		M.open_file(filename, line_number)
+	end)
+end
+
+function M.fzf_command(cmd, callback)
 	local temp_file = utils.get_temp_file("_fzf")
 	local win = utils.create_float_window()
 
-	local preview = preview_cmd or M.PREVIEW_COMMAND
 	local callback_function = callback or M.open_file
-
-	local fzf_cmd = cmd .. " | fzf --height 100% --border"
-	fzf_cmd = fzf_cmd .. " --preview '" .. preview .. "'"
-	fzf_cmd = fzf_cmd .. " > " .. temp_file
+	local fzf_cmd = cmd .. " > " .. temp_file
 
 	vim.fn.jobstart(fzf_cmd, {
 		term = true,
