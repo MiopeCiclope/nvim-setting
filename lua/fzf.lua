@@ -4,14 +4,6 @@ local M = {}
 M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {}'"
 M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border"
 
-function M.open_file(selected_file, line_number)
-	vim.cmd("edit " .. vim.fn.fnameescape(selected_file))
-
-	if line_number ~= nil then
-		vim.cmd(":" .. line_number)
-	end
-end
-
 -- Main fzf function for git files
 function M.git_files()
 	if not utils.check_dependencies() then
@@ -74,7 +66,7 @@ function M.grep_search()
 		local filename = parts[1]
 		local line_number = parts[2]
 
-		M.open_file(filename, line_number)
+		utils.open_file(filename, line_number)
 	end)
 end
 
@@ -82,7 +74,7 @@ function M.fzf_command(cmd, callback)
 	local temp_file = utils.get_temp_file("_fzf")
 	local win = utils.create_float_window()
 
-	local callback_function = callback or M.open_file
+	local callback_function = callback or utils.open_file
 	local fzf_cmd = cmd .. " > " .. temp_file
 
 	vim.fn.jobstart(fzf_cmd, {

@@ -1,5 +1,5 @@
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
+local opts = opts
 
 -- Pane navigation
 map("n", "<c-k>", ":wincmd k<CR>", opts)
@@ -34,7 +34,10 @@ end, opts)
 -- Search inside visual selection
 map("x", "/", ":<C-u>/\\%V", opts)
 
--- Key mappings
-map("n", "<C-p>", '<cmd>lua require("fzf").git_files()<CR>', { noremap = true, silent = true })
-map("n", "<Leader>b", '<cmd>lua require("fzf").buffers()<CR>', { noremap = true, silent = true })
-map("n", "<Leader>z", '<cmd>lua require("fzf").grep_search()<CR>', { noremap = true, silent = true })
+-- fzf integration
+map("n", "<C-p>", '<cmd>lua require("fzf").git_files()<CR>', opts)
+map("n", "<Leader>b", '<cmd>lua require("fzf").buffers()<CR>', opts)
+map("n", "<Leader>z", '<cmd>lua require("fzf").grep_search()<CR>', opts)
+
+-- terminal
+map("n", "<Leader>t", '<cmd>lua require("terminal").open_terminal()<CR>', opts)

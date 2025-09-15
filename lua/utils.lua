@@ -102,4 +102,12 @@ function M.create_float_window()
 	})
 end
 
+function M.open_file(selected_file, line_number)
+	vim.cmd("edit " .. vim.fn.fnameescape(selected_file))
+
+	if line_number ~= nil then
+		vim.cmd(":" .. line_number)
+	end
+end
+
 return M

@@ -99,7 +99,7 @@ return {
 							context_window = 512,
 							max_tokens = 256,
 							default_filetype_enabled = true,
-							auto_trigger = true,
+							auto_trigger = false,
 							only_trigger_by_keywords = true,
 							style = "blink.cmp",
 							timeout = 10,
