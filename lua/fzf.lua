@@ -59,7 +59,6 @@ function M.grep_search()
 		.. M.FZF_COMMAND
 		.. " --delimiter=':' --preview 'bat --style=numbers --color=always --highlight-line {2} --line-range {2}:+20 {1}'"
 
-	print(fzf_cmd)
 	M.fzf_command(fzf_cmd, function(selected)
 		local parts = vim.split(selected, ":", { plain = true })
 

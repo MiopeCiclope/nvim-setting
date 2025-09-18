@@ -40,14 +40,22 @@ return {
 				},
 			},
 		})
-		vim.keymap.set("n", "<leader>oa", "<cmd>ObsidianTomorrow<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>oo", "<cmd>ObsidianYesterday<CR>", { noremap = false })
 		vim.keymap.set("n", "<leader>on", ":ObsidianNew ", { noremap = false })
-		vim.keymap.set("n", "<leader>oww", "<cmd>ObsidianWorkspace work<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>owp", "<cmd>ObsidianWorkspace personal<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>op", "<cmd>ObsidianSearc<CR>", { noremap = false })
-		vim.keymap.set("n", "<leader>ott", "<cmd>ObsidianTemplate<CR>", { noremap = false })
+		vim.keymap.set("n", "<leader>op", function()
+			local vault_path = get_obsidian_workspace_path()
+			local fzf = require("fzf")
+
+			local pattern = vim.fn.input("Obsidian Grep Search: ")
+			if pattern == "" or pattern == nil then
+				return
+			end
+
+			local buffers = string.format("grep -rl '%s' %s --include='*.md' ", pattern, vault_path)
+
+			local fzf_cmd = buffers .. fzf.FZF_COMMAND .. fzf.PREVIEW_COMMAND
+			print(fzf_cmd)
+			fzf.fzf_command(fzf_cmd)
+		end, { noremap = false })
 		vim.keymap.set("n", "<leader>og", function()
 			if require("obsidian").util.cursor_on_markdown_link() then
 				return "<cmd>ObsidianFollowLink<CR>"
