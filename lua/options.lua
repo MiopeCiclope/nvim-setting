@@ -25,7 +25,6 @@ vim.opt.laststatus = 3
 
 -- Diagnostics
 vim.diagnostic.config({
-  virtual_text = true,
-  virtual_lines = false,
+	virtual_text = false,
+	virtual_lines = false,
 })
-

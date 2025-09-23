@@ -42,7 +42,7 @@ return {
 		})
 		vim.keymap.set("n", "<leader>on", ":ObsidianNew ", { noremap = false })
 		vim.keymap.set("n", "<leader>op", function()
-			local vault_path = get_obsidian_workspace_path()
+			local vault_path = require("obsidian").get_client().dir
 			local fzf = require("fzf")
 
 			local pattern = vim.fn.input("Obsidian Grep Search: ")
@@ -53,9 +53,9 @@ return {
 			local buffers = string.format("grep -rl '%s' %s --include='*.md' ", pattern, vault_path)
 
 			local fzf_cmd = buffers .. fzf.FZF_COMMAND .. fzf.PREVIEW_COMMAND
-			print(fzf_cmd)
 			fzf.fzf_command(fzf_cmd)
 		end, { noremap = false })
+
 		vim.keymap.set("n", "<leader>og", function()
 			if require("obsidian").util.cursor_on_markdown_link() then
 				return "<cmd>ObsidianFollowLink<CR>"

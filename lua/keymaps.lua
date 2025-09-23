@@ -1,5 +1,5 @@
 local map = vim.keymap.set
-local opts = opts
+local opts = { noremap = true }
 
 -- Pane navigation
 map("n", "<c-k>", ":wincmd k<CR>", opts)
