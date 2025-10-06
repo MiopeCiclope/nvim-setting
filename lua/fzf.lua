@@ -1,8 +1,11 @@
 local utils = require("utils")
 local M = {}
 
-M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {}'"
-M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border --bind 'ctrl-q:select-all'"
+M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border --bind 'ctrl-q:select-all' --delimiter=' - ' "
+M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {2}'"
+M.FILES_DISPLAY_NAME = " | awk -F'/' '{filename=$NF; print filename \" - \" $0  }' "
+M.FILES_PATH_RETURN = " | awk -F' - ' '{print $2}' "
+M.DEFAULT_COMMAND_PIPE = M.FILES_DISPLAY_NAME .. M.FZF_COMMAND .. M.PREVIEW_COMMAND .. M.FILES_PATH_RETURN
 
 -- Main fzf function for git files
 function M.git_files()
@@ -14,8 +17,7 @@ function M.git_files()
 		print("Not a git repository")
 		return
 	end
-
-	M.fzf_command("git ls-files" .. M.FZF_COMMAND .. M.PREVIEW_COMMAND)
+	M.fzf_command("git ls-files" .. M.DEFAULT_COMMAND_PIPE)
 end
 
 -- Buffer search using fzf
@@ -34,7 +36,7 @@ function M.buffers()
 
 	-- Create the fzf command with buffer list as input
 	local buffers_input = table.concat(buffers, "\n")
-	local fzf_cmd = string.format("echo %s ", vim.fn.shellescape(buffers_input)) .. M.FZF_COMMAND .. M.PREVIEW_COMMAND
+	local fzf_cmd = string.format("echo %s ", vim.fn.shellescape(buffers_input)) .. M.DEFAULT_COMMAND_PIPE
 
 	M.fzf_command(fzf_cmd)
 end
@@ -54,10 +56,15 @@ function M.grep_search()
 		return
 	end
 
+	local awk_cmd =
+		[['{filename=$1; rest=$0; sub(/[^:]*:/, "", rest); gsub(/:/, " - ", rest); split(filename, parts, "/"); print parts[length(parts)] " - " filename " - " rest}']]
 	local fzf_cmd = "git grep -i --line-number --color=always "
 		.. pattern
+		.. " | awk -F':' "
+		.. awk_cmd
 		.. M.FZF_COMMAND
-		.. " --delimiter=':' --preview 'bat --style=numbers --color=always --highlight-line {2} --line-range {2}:+20 {1}'"
+		.. " --preview 'bat --color=always --style=numbers --highlight-line {3} --line-range {3}:+20 {2}'"
+		.. M.FILES_PATH_RETURN
 
 	M.fzf_command(fzf_cmd)
 end
