@@ -89,14 +89,15 @@ function M.get_open_buffers()
 	return buffers
 end
 
-function M.create_float_window()
+function M.create_float_window(size)
+	local size_percentage = size or 0.95
 	local buf = vim.api.nvim_create_buf(false, true)
 	return vim.api.nvim_open_win(buf, true, {
 		relative = "editor",
-		width = math.floor(vim.o.columns * 0.8),
-		height = math.floor(vim.o.lines * 0.6),
-		row = math.floor((vim.o.lines - math.floor(vim.o.lines * 0.6)) / 2),
-		col = math.floor((vim.o.columns - math.floor(vim.o.columns * 0.8)) / 2),
+		width = math.floor(vim.o.columns * size_percentage),
+		height = math.floor(vim.o.lines * size_percentage),
+		row = math.floor((vim.o.lines - math.floor(vim.o.lines * size_percentage)) / 2),
+		col = math.floor((vim.o.columns - math.floor(vim.o.columns * size_percentage)) / 2),
 		style = "minimal",
 		border = "rounded",
 	})
@@ -108,6 +109,11 @@ function M.open_file(selected_file, line_number)
 	if line_number ~= nil then
 		vim.cmd(":" .. line_number)
 	end
+end
+
+function M.filename_format(filename)
+	local cropped_path, tail = filename:match("^(.*)/(.*)$")
+	return string.format("%s - %s/", tail, cropped_path)
 end
 
 return M
