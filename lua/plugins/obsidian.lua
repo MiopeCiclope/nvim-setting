@@ -57,7 +57,7 @@ return {
 
 			local buffers = string.format("grep -rl '%s' %s --include='*.md' ", pattern, vault_path)
 
-			local fzf_cmd = buffers .. fzf.FZF_COMMAND .. fzf.PREVIEW_COMMAND
+			local fzf_cmd = buffers .. fzf.DEFAULT_COMMAND_PIPE
 			fzf.fzf_command(fzf_cmd)
 		end, { noremap = false })
 
