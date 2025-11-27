@@ -70,6 +70,10 @@ return {
 				vim.lsp.buf.hover({ border = dashed_border })
 			end, opts)
 			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, opts)
+			vim.keymap.set("n", "<leader>G", function()
+				vim.cmd("vsplit") -- Execute the vim command
+				vim.lsp.buf.definition() -- Then call LSP definition
+			end, opts)
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
 			lspconfig.pyright.setup({
