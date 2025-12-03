@@ -4,7 +4,7 @@ local M = {}
 M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border --bind 'ctrl-q:select-all' --delimiter=' - ' "
 M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {2}'"
 M.FILES_DISPLAY_NAME = " | awk -F'/' '{filename=$NF; print filename \" - \" $0  }' "
-M.FILES_PATH_RETURN = " | awk -F' - ' '{print $2}' "
+M.FILES_PATH_RETURN = " | awk -F' - ' '{print $2 \":\" $3}' "
 M.DEFAULT_COMMAND_PIPE = M.FILES_DISPLAY_NAME .. M.FZF_COMMAND .. M.PREVIEW_COMMAND .. M.FILES_PATH_RETURN
 
 -- Main fzf function for git files
@@ -58,6 +58,7 @@ function M.grep_search()
 
 	local awk_cmd =
 		[['{filename=$1; rest=$0; sub(/[^:]*:/, "", rest); gsub(/:/, " - ", rest); split(filename, parts, "/"); print parts[length(parts)] " - " filename " - " rest}']]
+
 	local fzf_cmd = "git grep -i --line-number --color=always "
 		.. pattern
 		.. " | awk -F':' "
@@ -66,7 +67,11 @@ function M.grep_search()
 		.. " --preview 'bat --color=always --style=numbers --highlight-line {3} --line-range {3}:+20 {2}'"
 		.. M.FILES_PATH_RETURN
 
-	M.fzf_command(fzf_cmd)
+	local function grep_callback(selected_list)
+		utils.open_file(selected_list[1].filename, selected_list[1].lnum)
+	end
+
+	M.fzf_command(fzf_cmd, grep_callback)
 end
 
 function M.default_callback(selected_list)
