@@ -116,4 +116,27 @@ function M.filename_format(filename)
 	return string.format("%s - %s/", tail, cropped_path)
 end
 
+-- Get full path of current buffer
+function M.get_full_path()
+	return vim.fn.expand("%:p")
+end
+
+-- Get path from git repo root to file (fallback to full path if not in git repo)
+function M.get_repo_relative_path()
+	if not M.is_git_repo() then
+		return M.get_full_path()
+	end
+	local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("%s+", "")
+	local full_path = vim.fn.expand("%:p")
+	if git_root ~= "" then
+		return full_path:sub(#git_root + 2) -- +2 to remove leading slash
+	end
+	return full_path
+end
+
+-- Get filename only
+function M.get_filename_only()
+	return vim.fn.expand("%:t")
+end
+
 return M

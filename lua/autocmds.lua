@@ -14,3 +14,21 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 vim.api.nvim_create_user_command("W", function()
 	vim.cmd("write")
 end, {})
+
+-- Copy full path to clipboard
+vim.api.nvim_create_user_command("CopyFullPath", function()
+	local path = require("utils").get_full_path()
+	vim.fn.setreg("+", path)
+end, {})
+
+-- Copy repo-relative path to clipboard  
+vim.api.nvim_create_user_command("CopyRepoPath", function()
+	local path = require("utils").get_repo_relative_path()
+	vim.fn.setreg("+", path)
+end, {})
+
+-- Copy filename only to clipboard
+vim.api.nvim_create_user_command("CopyFileName", function()
+	local filename = require("utils").get_filename_only()
+	vim.fn.setreg("+", filename)
+end, {})
