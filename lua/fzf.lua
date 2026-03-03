@@ -68,20 +68,26 @@ function M.grep_search()
 		.. M.FILES_PATH_RETURN
 
 	local function grep_callback(selected_list)
-		utils.open_file(selected_list[1].filename, selected_list[1].lnum)
+		M.single_file_callback(selected_list[1])
 	end
 
 	M.fzf_command(fzf_cmd, grep_callback)
 end
 
-function M.default_callback(selected_list)
-	if #selected_list > 2 then
-		vim.fn.setqflist(selected_list, "r")
-		vim.cmd("copen")
-	end
+function M.single_file_callback(item)
+	utils.open_file(item.filename, item.lnum)
+end
 
+function M.multi_file_callback(selected_list)
+	vim.fn.setqflist(selected_list, "r")
+	vim.cmd("copen")
+end
+
+function M.default_callback(selected_list)
 	if #selected_list == 1 then
-		utils.open_file(selected_list[1].filename)
+		M.single_file_callback(selected_list[1])
+	elseif #selected_list > 1 then
+		M.multi_file_callback(selected_list)
 	end
 end
 
