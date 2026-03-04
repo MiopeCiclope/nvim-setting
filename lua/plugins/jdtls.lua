@@ -20,7 +20,7 @@ return {
 
 				local config = {
 					cmd = {
-						"/Users/romulotone/.jenv/versions/21.0.4/bin/java",
+						"/Users/romulotone/.jenv/versions/21.0.9/bin/java",
 
 						-- JVM flags MUST come before -jar or they are passed to the launcher as args, not to the JVM
 						"-Xms4g",
