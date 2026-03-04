@@ -95,48 +95,29 @@ return {
 					},
 
 					on_attach = function(client, bufnr)
-						-- Nuke ALL capabilities so jdtls never enters capability-based routing
-						client.server_capabilities.completionProvider = nil
-						client.server_capabilities.definitionProvider = false
-						client.server_capabilities.typeDefinitionProvider = false
-						client.server_capabilities.implementationProvider = false
-						client.server_capabilities.referencesProvider = false
-						client.server_capabilities.documentHighlightProvider = false
-						client.server_capabilities.documentSymbolProvider = false
-						client.server_capabilities.workspaceSymbolProvider = false
-						client.server_capabilities.codeActionProvider = false
-						client.server_capabilities.codeLensProvider = nil
-						client.server_capabilities.documentFormattingProvider = false
-						client.server_capabilities.documentRangeFormattingProvider = false
-						client.server_capabilities.renameProvider = false
-						client.server_capabilities.signatureHelpProvider = nil
-						client.server_capabilities.inlayHintProvider = false
-						client.server_capabilities.hoverProvider = false
+						local caps = client.server_capabilities
+						for key, _ in pairs(caps) do
+							if key:find("Provider") then
+								caps[key] = false
+							end
+						end
+						caps.completionProvider = nil
+						caps.signatureHelpProvider = nil
+						caps.textDocumentSync = nil
 
-						-- Call jdtls hover directly by client id, bypassing capability routing
+						-- 4. MANUALLY BIND HOVER ONLY
 						vim.keymap.set("n", "<leader>h", function()
+							print("fucking hoveer")
 							local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
 							client:request("textDocument/hover", params, function(err, result, ctx)
-								if err or not result or not result.contents then
+								if err or not result then
 									return
 								end
-								vim.lsp.handlers["textDocument/hover"](err, result, ctx, {
-									border = {
-										{ "┌", "FloatBorder" },
-										{ "╌", "FloatBorder" },
-										{ "┐", "FloatBorder" },
-										{ "┆", "FloatBorder" },
-										{ "┘", "FloatBorder" },
-										{ "╌", "FloatBorder" },
-										{ "└", "FloatBorder" },
-										{ "┆", "FloatBorder" },
-									},
-								})
+								vim.lsp.handlers["textDocument/hover"](err, result, ctx, { border = "rounded" })
 							end, bufnr)
-						end, { buffer = bufnr, desc = "Java hover (jdtls)" })
+						end, { buffer = bufnr, desc = "JDTLS Hover ONLY" })
 					end,
 				}
-
 				require("jdtls").start_or_attach(config)
 			end,
 		})

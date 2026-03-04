@@ -86,6 +86,18 @@ return {
 			end, opts)
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
+			vim.keymap.set("n", "<leader>i", function()
+				local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+				print("--- Active Clients Report ---")
+				for _, client in ipairs(clients) do
+					local has_def = client.server_capabilities.definitionProvider
+					local has_hover = client.server_capabilities.hoverProvider
+					print(string.format("Client: %s (ID: %d)", client.name, client.id))
+					print(string.format("  - Definition Provider: %s", tostring(has_def)))
+					print(string.format("  - Hover Provider: %s", tostring(has_hover)))
+				end
+			end, { desc = "Debug LSP Capabilities" })
+
 			lspconfig.pyright.setup({
 				capabilities = capabilities,
 				settings = {
