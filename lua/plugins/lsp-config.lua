@@ -11,22 +11,40 @@ return {
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
+			local configs = require("lspconfig.configs") -- Required for custom servers
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			-- LSP servers configuration
+			-- 1. DEFINE IDEALS (Custom Server Injection)
+			if not configs.ideals then
+				configs.ideals = {
+					default_config = {
+						-- Connect to IntelliJ via the TCP port you specified (8989)
+						cmd = vim.lsp.rpc.connect("127.0.0.1", 8989),
+						filetypes = { "java", "kotlin" },
+						-- Marker for IntelliJ projects
+						root_dir = lspconfig.util.root_pattern(".idea", "pom.xml", "build.gradle"),
+						settings = {},
+					},
+				}
+			end
+
+			-- 2. SETUP IDEALS
+			lspconfig.ideals.setup({
+				capabilities = capabilities,
+				on_attach = function(client, bufnr)
+					-- Confirmation message in your status line
+					client.server_capabilities.hoverProvider = false
+					vim.notify("Connected to IntelliJ (IdeaLS)", vim.log.levels.INFO)
+				end,
+			})
+
+			-- --- Your existing servers below ---
+
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
 				settings = {
-					typescript = {
-						format = {
-							enable = false,
-						},
-					},
-					javascript = {
-						format = {
-							enable = false,
-						},
-					},
+					typescript = { format = { enable = false } },
+					javascript = { format = { enable = false } },
 				},
 			})
 
@@ -34,18 +52,10 @@ return {
 				capabilities = capabilities,
 				settings = {
 					Lua = {
-						runtime = {
-							version = "LuaJIT", -- Tell lua_ls you're using LuaJIT (Neovim's runtime)
-						},
-						diagnostics = {
-							globals = { "vim" }, -- Tell lua_ls that 'vim' is a global
-						},
+						runtime = { version = "LuaJIT" },
+						diagnostics = { globals = { "vim" } },
 						workspace = {
-							library = {
-								[vim.env.VIMRUNTIME] = true,
-								-- vim.api.nvim_get_runtime_file("", true),
-							},
-							-- Prevent the server from suggesting third-party Lua modules
+							library = { [vim.env.VIMRUNTIME] = true },
 							checkThirdParty = false,
 						},
 						telemetry = { enable = false },
@@ -53,8 +63,8 @@ return {
 				},
 			})
 
+			-- UI & Keymaps
 			local opts = {}
-			-- Custom borders for LSP handlers
 			local dashed_border = {
 				{ "┌", "FloatBorder" },
 				{ "╌", "FloatBorder" },
@@ -71,8 +81,8 @@ return {
 			end, opts)
 			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, opts)
 			vim.keymap.set("n", "<leader>G", function()
-				vim.cmd("vsplit") -- Execute the vim command
-				vim.lsp.buf.definition() -- Then call LSP definition
+				vim.cmd("vsplit")
+				vim.lsp.buf.definition()
 			end, opts)
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
@@ -89,19 +99,9 @@ return {
 				},
 			})
 
-			local servers = {
-				"html",
-				"cssls",
-				"gopls",
-				"jsonls",
-				"omnisharp",
-				"clangd",
-			}
-
+			local servers = { "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd" }
 			for _, server in ipairs(servers) do
-				lspconfig[server].setup({
-					capabilities = capabilities,
-				})
+				lspconfig[server].setup({ capabilities = capabilities })
 			end
 		end,
 	},

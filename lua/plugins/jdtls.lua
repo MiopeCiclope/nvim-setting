@@ -2,30 +2,29 @@ return {
 	"mfussenegger/nvim-jdtls",
 	ft = { "java" },
 	config = function()
-		-- Detect performance cores: Apple Silicon exposes perflevel0, Intel falls back to logicalcpu
 		local perf_cores = tonumber((vim.fn.system("sysctl -n hw.perflevel0.logicalcpu 2>/dev/null"):gsub("%s+", "")))
 			or tonumber((vim.fn.system("sysctl -n hw.logicalcpu 2>/dev/null"):gsub("%s+", "")))
 			or 4
 		local ci_count = math.max(2, perf_cores - 1)
 
-		-- Re-run start_or_attach for every Java buffer so that files opened via
-		-- go-to-definition also get jdtls attached (the lazy.nvim config function
-		-- only runs once, not per-buffer).
 		vim.api.nvim_create_autocmd("FileType", {
+			group = vim.api.nvim_create_augroup("jdtls_attach", { clear = true }),
 			pattern = "java",
 			callback = function()
-				-- Prefer the nearest build file so opening from a submodule only indexes that module.
-				-- Falls back to .git root if no build file is found above.
+				if vim.b.jdtls_attached then
+					return
+				end
+				vim.b.jdtls_attached = true
+
 				local root_dir = require("jdtls.setup").find_root({ "build.gradle.kts", "build.gradle", "pom.xml" })
 					or require("jdtls.setup").find_root({ ".git", "gradlew" })
-				local project_name = root_dir and vim.fn.fnamemodify(root_dir, ":t") or vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+				local project_name = root_dir and vim.fn.fnamemodify(root_dir, ":t")
+					or vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
 				local workspace_dir = "/Users/romulotone/.local/share/jdtls-workspace/" .. project_name
 
 				local config = {
 					cmd = {
 						"/Users/romulotone/.jenv/versions/21.0.9/bin/java",
-
-						-- JVM flags MUST come before -jar or they are passed to the launcher as args, not to the JVM
 						"-Xms4g",
 						"-Xmx20g",
 						"-XX:ReservedCodeCacheSize=512m",
@@ -37,8 +36,6 @@ return {
 						"-XX:AdaptiveSizePolicyWeight=90",
 						"-XX:+UseStringDeduplication",
 						"-XX:+AlwaysPreTouch",
-
-						-- Required Eclipse/OSGi args
 						"-Declipse.application=org.eclipse.jdt.ls.core.id1",
 						"-Dosgi.bundles.defaultStartLevel=4",
 						"-Declipse.product=org.eclipse.jdt.ls.core.product",
@@ -67,17 +64,12 @@ return {
 					settings = {
 						java = {
 							autobuild = { enabled = false },
-
-							-- Disable jdtls formatter — none-ls handles formatting
 							format = { enabled = false },
-
 							completion = {
 								maxResults = 30,
 								importOrder = { "java", "javax", "org", "com", "" },
-								-- Skip argument inference in completions — reduces per-completion computation
 								guessMethodArguments = false,
 							},
-
 							import = {
 								exclusions = {
 									"**/.git/**",
@@ -89,29 +81,63 @@ return {
 									"**/node_modules/**",
 								},
 							},
-
 							eclipse = { downloadSources = true },
 							maven = { downloadSources = true },
-
-							signatureHelp = { enabled = true },
+							signatureHelp = { enabled = false },
 							references = { includeDecompiledSources = true },
 						},
 					},
 
-					init_options = {
-						bundles = {},
+					init_options = { bundles = {} },
+
+					handlers = {
+						["textDocument/publishDiagnostics"] = function() end,
 					},
+
+					on_attach = function(client, bufnr)
+						-- Nuke ALL capabilities so jdtls never enters capability-based routing
+						client.server_capabilities.completionProvider = nil
+						client.server_capabilities.definitionProvider = false
+						client.server_capabilities.typeDefinitionProvider = false
+						client.server_capabilities.implementationProvider = false
+						client.server_capabilities.referencesProvider = false
+						client.server_capabilities.documentHighlightProvider = false
+						client.server_capabilities.documentSymbolProvider = false
+						client.server_capabilities.workspaceSymbolProvider = false
+						client.server_capabilities.codeActionProvider = false
+						client.server_capabilities.codeLensProvider = nil
+						client.server_capabilities.documentFormattingProvider = false
+						client.server_capabilities.documentRangeFormattingProvider = false
+						client.server_capabilities.renameProvider = false
+						client.server_capabilities.signatureHelpProvider = nil
+						client.server_capabilities.inlayHintProvider = false
+						client.server_capabilities.hoverProvider = false
+
+						-- Call jdtls hover directly by client id, bypassing capability routing
+						vim.keymap.set("n", "<leader>h", function()
+							local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
+							client:request("textDocument/hover", params, function(err, result, ctx)
+								if err or not result or not result.contents then
+									return
+								end
+								vim.lsp.handlers["textDocument/hover"](err, result, ctx, {
+									border = {
+										{ "┌", "FloatBorder" },
+										{ "╌", "FloatBorder" },
+										{ "┐", "FloatBorder" },
+										{ "┆", "FloatBorder" },
+										{ "┘", "FloatBorder" },
+										{ "╌", "FloatBorder" },
+										{ "└", "FloatBorder" },
+										{ "┆", "FloatBorder" },
+									},
+								})
+							end, bufnr)
+						end, { buffer = bufnr, desc = "Java hover (jdtls)" })
+					end,
 				}
 
 				require("jdtls").start_or_attach(config)
-
-				vim.api.nvim_buf_create_user_command(0, "JavaRename", function()
-					vim.lsp.buf.rename()
-				end, { desc = "Rename symbol across project" })
-
-				vim.api.nvim_buf_create_user_command(0, "JavaImplementations", function()
-					vim.lsp.buf.implementation()
-				end, { desc = "Show all implementations of symbol" })
 			end,
 		})
 	end,
