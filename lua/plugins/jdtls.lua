@@ -14,7 +14,10 @@ return {
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "java",
 			callback = function()
-				local root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" })
+				-- Prefer the nearest build file so opening from a submodule only indexes that module.
+				-- Falls back to .git root if no build file is found above.
+				local root_dir = require("jdtls.setup").find_root({ "build.gradle.kts", "build.gradle", "pom.xml" })
+					or require("jdtls.setup").find_root({ ".git", "gradlew" })
 				local project_name = root_dir and vim.fn.fnamemodify(root_dir, ":t") or vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
 				local workspace_dir = "/Users/romulotone/.local/share/jdtls-workspace/" .. project_name
 
@@ -33,6 +36,7 @@ return {
 						"-XX:GCTimeRatio=4",
 						"-XX:AdaptiveSizePolicyWeight=90",
 						"-XX:+UseStringDeduplication",
+						"-XX:+AlwaysPreTouch",
 
 						-- Required Eclipse/OSGi args
 						"-Declipse.application=org.eclipse.jdt.ls.core.id1",
@@ -64,9 +68,14 @@ return {
 						java = {
 							autobuild = { enabled = false },
 
+							-- Disable jdtls formatter — none-ls handles formatting
+							format = { enabled = false },
+
 							completion = {
 								maxResults = 30,
 								importOrder = { "java", "javax", "org", "com", "" },
+								-- Skip argument inference in completions — reduces per-completion computation
+								guessMethodArguments = false,
 							},
 
 							import = {
