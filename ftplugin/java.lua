@@ -113,4 +113,4 @@ local config = {
 }
 
 -- 4. Execute
-jdtls.start_or_attach(config)
+-- jdtls.start_or_attach(config)

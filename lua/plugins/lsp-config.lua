@@ -86,7 +86,19 @@ return {
 			end, opts)
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
-			vim.keymap.set("n", "<leader>i", function()
+			vim.keymap.set("n", "<leader>L", function()
+			local current = vim.lsp.log.get_level()
+			if current == vim.log.levels.DEBUG then
+				vim.lsp.set_log_level("warn")
+				vim.notify("LSP log: OFF (warn)")
+			else
+				vim.lsp.set_log_level("debug")
+				vim.notify("LSP log: ON (debug)")
+				vim.cmd("LspLog")
+			end
+		end, { desc = "Toggle LSP debug log" })
+
+		vim.keymap.set("n", "<leader>i", function()
 				local clients = vim.lsp.get_active_clients({ bufnr = 0 })
 				print("--- Active Clients Report ---")
 				for _, client in ipairs(clients) do
