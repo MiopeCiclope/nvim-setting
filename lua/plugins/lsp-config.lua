@@ -33,7 +33,6 @@ return {
 				capabilities = capabilities,
 				on_attach = function(client, bufnr)
 					-- Confirmation message in your status line
-					client.server_capabilities.hoverProvider = false
 					vim.notify("Connected to IntelliJ (IdeaLS)", vim.log.levels.INFO)
 				end,
 			})
@@ -87,28 +86,16 @@ return {
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
 			vim.keymap.set("n", "<leader>L", function()
-			local current = vim.lsp.log.get_level()
-			if current == vim.log.levels.DEBUG then
-				vim.lsp.set_log_level("warn")
-				vim.notify("LSP log: OFF (warn)")
-			else
-				vim.lsp.set_log_level("debug")
-				vim.notify("LSP log: ON (debug)")
-				vim.cmd("LspLog")
-			end
-		end, { desc = "Toggle LSP debug log" })
-
-		vim.keymap.set("n", "<leader>i", function()
-				local clients = vim.lsp.get_active_clients({ bufnr = 0 })
-				print("--- Active Clients Report ---")
-				for _, client in ipairs(clients) do
-					local has_def = client.server_capabilities.definitionProvider
-					local has_hover = client.server_capabilities.hoverProvider
-					print(string.format("Client: %s (ID: %d)", client.name, client.id))
-					print(string.format("  - Definition Provider: %s", tostring(has_def)))
-					print(string.format("  - Hover Provider: %s", tostring(has_hover)))
+				local current = vim.lsp.log.get_level()
+				if current == vim.log.levels.DEBUG then
+					vim.lsp.set_log_level("warn")
+					vim.notify("LSP log: OFF (warn)")
+				else
+					vim.lsp.set_log_level("debug")
+					vim.notify("LSP log: ON (debug)")
+					vim.cmd("LspLog")
 				end
-			end, { desc = "Debug LSP Capabilities" })
+			end, { desc = "Toggle LSP debug log" })
 
 			lspconfig.pyright.setup({
 				capabilities = capabilities,
