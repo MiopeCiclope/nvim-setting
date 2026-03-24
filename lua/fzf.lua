@@ -2,10 +2,11 @@ local utils = require("utils")
 local M = {}
 
 M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border --bind 'ctrl-q:select-all' --delimiter=' - ' "
-M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {2}'"
-M.FILES_DISPLAY_NAME = " | awk -F'/' '{filename=$NF; print filename \" - \" $0  }' "
-M.FILES_PATH_RETURN = " | awk -F' - ' '{print $2 \":\" $3}' "
-M.DEFAULT_COMMAND_PIPE = M.FILES_DISPLAY_NAME .. M.FZF_COMMAND .. M.PREVIEW_COMMAND .. M.FILES_PATH_RETURN
+M.FILES_FZF_COMMAND = M.FZF_COMMAND .. " --with-nth=1,2 "
+M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {3}'"
+M.FILES_DISPLAY_NAME = [[ | awk -F'/' '{n=NF; filename=$n; if (n > 4) path=".../" $(n-2) "/" $(n-1) "/" $n; else path=$0; print filename " - " path " - " $0}' ]]
+M.FILES_PATH_RETURN = " | awk -F' - ' '{print $3}' "
+M.DEFAULT_COMMAND_PIPE = M.FILES_DISPLAY_NAME .. M.FILES_FZF_COMMAND .. M.PREVIEW_COMMAND .. M.FILES_PATH_RETURN
 
 -- Main fzf function for git files
 function M.git_files()
@@ -65,7 +66,7 @@ function M.grep_search()
 		.. awk_cmd
 		.. M.FZF_COMMAND
 		.. " --preview 'bat --color=always --style=numbers --highlight-line {3} --line-range {3}:+20 {2}'"
-		.. M.FILES_PATH_RETURN
+		.. " | awk -F' - ' '{print $2 \":\" $3}' "
 
 	local function grep_callback(selected_list)
 		M.single_file_callback(selected_list[1])
