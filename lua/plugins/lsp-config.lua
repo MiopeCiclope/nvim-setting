@@ -10,45 +10,38 @@ return {
 			"williamboman/mason-lspconfig.nvim",
 		},
 		config = function()
-			local lspconfig = require("lspconfig")
-			local configs = require("lspconfig.configs") -- Required for custom servers
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			-- 1. DEFINE IDEALS (Custom Server Injection)
-			if not configs.ideals then
-				configs.ideals = {
-					default_config = {
-						-- Connect to IntelliJ via the TCP port you specified (8989)
-						cmd = vim.lsp.rpc.connect("127.0.0.1", 8989),
-						filetypes = { "java", "kotlin" },
-						-- Marker for IntelliJ projects
-						root_dir = lspconfig.util.root_pattern(".idea", "pom.xml", "build.gradle"),
-						settings = {},
-					},
-				}
-			end
+			-- Set capabilities globally for all servers
+			vim.lsp.config("*", { capabilities = capabilities })
 
-			-- 2. SETUP IDEALS
-			lspconfig.ideals.setup({
-				capabilities = capabilities,
+			-- 1. DEFINE & ENABLE IDEALS (Custom Server for IntelliJ via TCP)
+			-- Merge default nvim capabilities with blink's so IdeaLS gets workspaceFolders
+			-- and other fields it needs to resolve symbols correctly.
+			local ideals_caps = vim.tbl_deep_extend(
+				"force",
+				vim.lsp.protocol.make_client_capabilities(),
+				capabilities
+			)
+			vim.lsp.config("ideals", {
+				cmd = vim.lsp.rpc.connect("127.0.0.1", 8989),
+				filetypes = { "java", "kotlin" },
+				root_markers = { ".idea" },
+				capabilities = ideals_caps,
 				on_attach = function(client, bufnr)
-					-- Confirmation message in your status line
 					vim.notify("Connected to IntelliJ (IdeaLS)", vim.log.levels.INFO)
 				end,
 			})
+			vim.lsp.enable("ideals")
 
-			-- --- Your existing servers below ---
-
-			lspconfig.ts_ls.setup({
-				capabilities = capabilities,
+			vim.lsp.config("ts_ls", {
 				settings = {
 					typescript = { format = { enable = false } },
 					javascript = { format = { enable = false } },
 				},
 			})
 
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
+			vim.lsp.config("lua_ls", {
 				settings = {
 					Lua = {
 						runtime = { version = "LuaJIT" },
@@ -61,6 +54,20 @@ return {
 					},
 				},
 			})
+
+			vim.lsp.config("pyright", {
+				settings = {
+					python = {
+						analysis = {
+							autoSearchPaths = true,
+							diagnosticMode = "openFilesOnly",
+							useLibraryCodeForTypes = true,
+						},
+					},
+				},
+			})
+
+			vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd" })
 
 			-- UI & Keymaps
 			local opts = {}
@@ -96,24 +103,6 @@ return {
 					vim.cmd("LspLog")
 				end
 			end, { desc = "Toggle LSP debug log" })
-
-			lspconfig.pyright.setup({
-				capabilities = capabilities,
-				settings = {
-					python = {
-						analysis = {
-							autoSearchPaths = true,
-							diagnosticMode = "openFilesOnly",
-							useLibraryCodeForTypes = true,
-						},
-					},
-				},
-			})
-
-			local servers = { "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd" }
-			for _, server in ipairs(servers) do
-				lspconfig[server].setup({ capabilities = capabilities })
-			end
 		end,
 	},
 }
