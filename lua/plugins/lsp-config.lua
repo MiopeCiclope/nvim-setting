@@ -67,7 +67,27 @@ return {
 				},
 			})
 
-			vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd" })
+			vim.lsp.config("tailwindcss", {
+			filetypes = {
+				"html", "css", "scss",
+				"javascript", "javascriptreact", "typescript", "typescriptreact",
+				"vue", "svelte", "astro",
+			},
+			settings = {
+				tailwindCSS = {
+					experimental = {
+						classRegex = {
+							-- bare string literals: "flex items-center"
+							{ '["\'`]([^"\'`]*)["\'`]' },
+							-- array items: ["flex", "items-center"]
+							{ '\\[([^\\]]*)\\]', '["\'`]([^"\'`]*)["\'`]' },
+						},
+					},
+				},
+			},
+		})
+
+		vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd", "tailwindcss" })
 
 			-- UI & Keymaps
 			local opts = {}
