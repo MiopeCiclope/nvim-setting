@@ -87,7 +87,8 @@ return {
 			},
 		})
 
-		vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd", "tailwindcss" })
+
+		vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd", "tailwindcss", "sqls" })
 
 			-- UI & Keymaps
 			local opts = {}
