@@ -1,7 +1,7 @@
 local utils = require("utils")
 local M = {}
 
-M.FZF_COMMAND = " | fzf --ansi --multi --height 100% --border --bind 'ctrl-q:select-all' --delimiter=' - ' "
+M.FZF_COMMAND = " | fzf --ansi --multi --cycle --height 100% --border --bind 'ctrl-q:select-all' --delimiter=' - ' "
 M.FILES_FZF_COMMAND = M.FZF_COMMAND .. " --with-nth=1,2 "
 M.PREVIEW_COMMAND = " --preview 'bat --color=always --style=numbers --line-range :500 {3}'"
 M.FILES_DISPLAY_NAME = [[ | awk -F'/' '{n=NF; filename=$n; if (n > 4) path=".../" $(n-2) "/" $(n-1) "/" $n; else path=$0; print filename " - " path " - " $0}' ]]
@@ -18,7 +18,7 @@ function M.git_files()
 		print("Not a git repository")
 		return
 	end
-	M.fzf_command("git ls-files" .. M.DEFAULT_COMMAND_PIPE)
+	M.fzf_command("{ git ls-files; git ls-files --others --exclude-standard; }" .. M.DEFAULT_COMMAND_PIPE)
 end
 
 -- Buffer search using fzf
@@ -68,11 +68,7 @@ function M.grep_search()
 		.. " --preview 'bat --color=always --style=numbers --highlight-line {3} --line-range {3}:+20 {2}'"
 		.. " | awk -F' - ' '{print $2 \":\" $3}' "
 
-	local function grep_callback(selected_list)
-		M.single_file_callback(selected_list[1])
-	end
-
-	M.fzf_command(fzf_cmd, grep_callback)
+	M.fzf_command(fzf_cmd)
 end
 
 function M.single_file_callback(item)
@@ -121,7 +117,7 @@ function M.fzf_command(cmd, callback)
 								local parts = vim.split(line, ":", { plain = true })
 
 								local filename = parts[1]
-								local line_number = parts[2] or 1
+								local line_number = tonumber(parts[2]) or 1
 								local text = parts[3] or ""
 
 								table.insert(qflist, { filename = filename, lnum = line_number, text = text })
