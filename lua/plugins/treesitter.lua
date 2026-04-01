@@ -1,6 +1,7 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	build = ":TSUpdate",
+	dependencies = { "windwp/nvim-ts-autotag" },
 	config = function()
 		local treesitterConfig = require("nvim-treesitter.configs")
 		treesitterConfig.setup({
@@ -10,5 +11,6 @@ return {
 			indent = { enable = true },
 			additional_vim_regex_highlighting = false,
 		})
+		require("nvim-ts-autotag").setup()
 	end,
 }
