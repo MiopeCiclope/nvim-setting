@@ -27,7 +27,6 @@ return {
 	},
 	{
 		"saghen/blink.cmp",
-		dependencies = { "Kurama622/llm.nvim" },
 		version = "*",
 		opts = {
 			cmdline = {
@@ -48,16 +47,7 @@ return {
 				},
 			},
 			sources = {
-				default = { "llm", "lsp", "path", "snippets", "buffer" },
-				providers = {
-					llm = {
-						name = "llm",
-						module = "llm.common.completion.frontends.blink",
-						timeout_ms = 10000,
-						score_offset = 100,
-						async = true,
-					},
-				},
+				default = { "lsp", "path", "snippets", "buffer" },
 			},
 			completion = {
 				documentation = {
@@ -75,18 +65,10 @@ return {
 						components = {
 							kind_icon = {
 								text = function(ctx)
-									if ctx.item.kind_name == "llm" then
-										return " "
-									else
-										return ctx.kind_icon
-									end
+									return ctx.kind_icon
 								end,
 								highlight = function(ctx)
-									if ctx.item.kind_name == "llm" then
-										return "BlinkCmpKindSnippet"
-									else
-										return ctx.kind_hl
-									end
+									return ctx.kind_hl
 								end,
 							},
 						},

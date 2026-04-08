@@ -10,8 +10,13 @@ return {
 
 				vim.api.nvim_buf_create_user_command(bufnr, "SqlsExecuteQuery", function(args)
 					require("sqls.commands").exec(
-						client.id, "executeQuery", { split = "belowright" },
-						args.range ~= 0, nil, args.line1, args.line2
+						client.id,
+						"executeQuery",
+						{ split = "belowright" },
+						args.range ~= 0,
+						nil,
+						args.line1,
+						args.line2
 					)
 				end, { range = true })
 
@@ -36,12 +41,24 @@ return {
 						vim.notify("sqls: no statement at cursor", vim.log.levels.WARN)
 						return
 					end
-					require("sqls.commands").exec(client.id, "executeQuery", { split = "belowright" }, true, nil, start_line, end_line)
+					require("sqls.commands").exec(
+						client.id,
+						"executeQuery",
+						{ split = "belowright" },
+						true,
+						nil,
+						start_line,
+						end_line
+					)
 				end, { noremap = true, buffer = bufnr, desc = "Execute statement" })
 
 				-- Visual mode: use : to preserve selection range
-				vim.keymap.set("x", "<leader>sq", ":SqlsExecuteQuery<cr>",
-					{ noremap = true, buffer = bufnr, desc = "Execute selection" })
+				vim.keymap.set(
+					"x",
+					"<leader>sq",
+					":SqlsExecuteQuery<cr>",
+					{ noremap = true, buffer = bufnr, desc = "Execute selection" }
+				)
 			end,
 		})
 	end,
