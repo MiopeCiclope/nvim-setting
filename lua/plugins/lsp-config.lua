@@ -23,8 +23,33 @@ return {
 				vim.lsp.protocol.make_client_capabilities(),
 				capabilities
 			)
+			local function ideals_cmd(dispatchers)
+				local function is_listening()
+					local out = vim.fn.system("lsof -nP -i tcp:8989 -sTCP:LISTEN 2>/dev/null")
+					return out ~= ""
+				end
+
+				if not is_listening() then
+					vim.notify("Starting IntelliJ LSP server...", vim.log.levels.INFO)
+					vim.fn.jobstart({
+						vim.fn.expand("~/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"),
+						"lsp-server", "tcp", "8989",
+					}, { detach = true })
+
+					-- Wait up to 30s for port to open (processes UI events between checks)
+					local ok = vim.fn.wait(30000, is_listening, 500)
+					if ok ~= 0 then
+						vim.notify("IntelliJ LSP server did not start in time", vim.log.levels.ERROR)
+						return
+					end
+					vim.notify("IntelliJ LSP server ready, connecting...", vim.log.levels.INFO)
+				end
+
+				return vim.lsp.rpc.connect("127.0.0.1", 8989)(dispatchers)
+			end
+
 			vim.lsp.config("ideals", {
-				cmd = vim.lsp.rpc.connect("127.0.0.1", 8989),
+				cmd = ideals_cmd,
 				filetypes = { "java", "kotlin" },
 				root_markers = { ".idea" },
 				capabilities = ideals_caps,

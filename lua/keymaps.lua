@@ -41,3 +41,4 @@ map("n", "<Leader>z", '<cmd>lua require("fzf").grep_search()<CR>', opts)
 
 -- terminal
 map("n", "<Leader>t", '<cmd>lua require("terminal").open_terminal()<CR>', opts)
+map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)

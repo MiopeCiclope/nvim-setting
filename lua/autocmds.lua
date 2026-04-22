@@ -21,7 +21,7 @@ vim.api.nvim_create_user_command("CopyFullPath", function()
 	vim.fn.setreg("+", path)
 end, {})
 
--- Copy repo-relative path to clipboard  
+-- Copy repo-relative path to clipboard
 vim.api.nvim_create_user_command("CopyRepoPath", function()
 	local path = require("utils").get_repo_relative_path()
 	vim.fn.setreg("+", path)

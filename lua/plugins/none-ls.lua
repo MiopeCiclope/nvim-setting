@@ -16,11 +16,50 @@ return {
 			}),
 		}
 
+		local severity_map = {
+			warning = vim.diagnostic.severity.WARN,
+			error = vim.diagnostic.severity.ERROR,
+		}
+
+		local oxlint = {
+			method = null_ls.methods.DIAGNOSTICS,
+			filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+			generator = null_ls.generator({
+				command = "/opt/homebrew/bin/oxlint",
+				args = { "--format", "json", "$FILENAME" },
+				to_stdin = false,
+				check_exit_code = function(code)
+					return code <= 1
+				end,
+				on_output = function(params)
+					local diagnostics = {}
+					local ok, parsed = pcall(vim.json.decode, params.output)
+					if not ok or not parsed or not parsed.diagnostics then
+						return diagnostics
+					end
+					for _, d in ipairs(parsed.diagnostics) do
+						local label = d.labels and d.labels[1]
+						if label then
+							table.insert(diagnostics, {
+								row = label.span.line,
+								col = label.span.column - 1,
+								message = d.message,
+								code = d.code,
+								severity = severity_map[d.severity] or vim.diagnostic.severity.WARN,
+								source = "oxlint",
+							})
+						end
+					end
+					return diagnostics
+				end,
+			}),
+		}
+
 		null_ls.setup({
 			sources = {
 				-- JS/TS
-				require("none-ls.diagnostics.eslint_d"),
-				require("none-ls.formatting.eslint_d"),
+				oxlint,
+				null_ls.builtins.formatting.prettier,
 
 				-- Rust
 				rustfmt,
