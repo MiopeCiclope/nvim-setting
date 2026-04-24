@@ -113,7 +113,19 @@ return {
 		})
 
 
-		vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd", "tailwindcss", "sqls" })
+		-- Model Compiler LSP for .pm (page model) files
+		vim.filetype.add({ extension = { pm = "pagemodel" } })
+		vim.lsp.config("model_compiler", {
+			cmd = {
+				"node",
+				vim.fn.expand("~/projects/model-compiler/packages/model-language-server/dist/server.js"),
+				"--stdio",
+			},
+			filetypes = { "pagemodel" },
+			root_markers = { "package.json", ".git" },
+		})
+
+		vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd", "tailwindcss", "sqls", "model_compiler" })
 
 			-- UI & Keymaps
 			local opts = {}

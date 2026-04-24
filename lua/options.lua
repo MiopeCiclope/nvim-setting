@@ -25,8 +25,8 @@ vim.opt.laststatus = 3
 
 -- Diagnostics
 vim.diagnostic.config({
-	virtual_text = false,
-	virtual_lines = false,
+	virtual_text = true,
+	virtual_lines = true,
 })
 
 -- vim.cmd("set showtabline=2")
