@@ -24,9 +24,9 @@ vim.opt.laststatus = 3
 -- vim.opt.wildmode = "longest:full,full"
 
 -- Diagnostics
-vim.diagnostic.config({
-	virtual_text = true,
-	virtual_lines = true,
-})
+-- vim.diagnostic.config({
+-- 	virtual_text = true,
+-- 	virtual_lines = true,
+-- })
 
 -- vim.cmd("set showtabline=2")

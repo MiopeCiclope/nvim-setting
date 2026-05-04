@@ -10,6 +10,9 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	command = [[%s/\s\+$//e]],
 })
 
+-- JSON Tree-sitter highlighting for .pm files (LSP stays as model_compiler)
+vim.treesitter.language.register("json", "pagemodel")
+
 -- Provide a :W command (write file)
 vim.api.nvim_create_user_command("W", function()
 	vim.cmd("write")
