@@ -30,7 +30,7 @@ function M.get_diagnostics()
 	return diagnostics
 end
 
-vim.g.show_full_path = false
+vim.g.show_full_path = true
 function M.get_dynamic_filename()
 	return vim.g.show_full_path and vim.fn.expand("%:f") or vim.fn.expand("%:t")
 end

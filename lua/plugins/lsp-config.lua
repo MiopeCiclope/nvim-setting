@@ -18,11 +18,7 @@ return {
 			-- 1. DEFINE & ENABLE IDEALS (Custom Server for IntelliJ via TCP)
 			-- Merge default nvim capabilities with blink's so IdeaLS gets workspaceFolders
 			-- and other fields it needs to resolve symbols correctly.
-			local ideals_caps = vim.tbl_deep_extend(
-				"force",
-				vim.lsp.protocol.make_client_capabilities(),
-				capabilities
-			)
+			local ideals_caps = vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), capabilities)
 			local function ideals_cmd(dispatchers)
 				local function is_listening()
 					local out = vim.fn.system("lsof -nP -i tcp:8989 -sTCP:LISTEN 2>/dev/null")
@@ -33,7 +29,9 @@ return {
 					vim.notify("Starting IntelliJ LSP server...", vim.log.levels.INFO)
 					vim.fn.jobstart({
 						vim.fn.expand("~/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"),
-						"lsp-server", "tcp", "8989",
+						"lsp-server",
+						"tcp",
+						"8989",
 					}, { detach = true })
 
 					-- Wait up to 30s for port to open (processes UI events between checks)
@@ -93,39 +91,59 @@ return {
 			})
 
 			vim.lsp.config("tailwindcss", {
-			filetypes = {
-				"html", "css", "scss",
-				"javascript", "javascriptreact", "typescript", "typescriptreact",
-				"vue", "svelte", "astro",
-			},
-			settings = {
-				tailwindCSS = {
-					experimental = {
-						classRegex = {
-							-- bare string literals: "flex items-center"
-							{ '["\'`]([^"\'`]*)["\'`]' },
-							-- array items: ["flex", "items-center"]
-							{ '\\[([^\\]]*)\\]', '["\'`]([^"\'`]*)["\'`]' },
+				filetypes = {
+					"html",
+					"css",
+					"scss",
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact",
+					"vue",
+					"svelte",
+					"astro",
+				},
+				settings = {
+					tailwindCSS = {
+						experimental = {
+							classRegex = {
+								-- bare string literals: "flex items-center"
+								{ "[\"'`]([^\"'`]*)[\"'`]" },
+								-- array items: ["flex", "items-center"]
+								{ "\\[([^\\]]*)\\]", "[\"'`]([^\"'`]*)[\"'`]" },
+							},
 						},
 					},
 				},
-			},
-		})
+			})
 
+			-- Model Compiler LSP for .pm (page model) files
+			vim.filetype.add({ extension = { pm = "pagemodel" } })
+			vim.lsp.config("model_compiler", {
+				cmd = {
+					"node",
+					vim.fn.expand("~/projects/model-compiler/packages/model-language-server/dist/server.js"),
+					"--stdio",
+				},
+				filetypes = { "pagemodel" },
+				root_markers = { "package.json", ".git" },
+			})
 
-		-- Model Compiler LSP for .pm (page model) files
-		vim.filetype.add({ extension = { pm = "pagemodel" } })
-		vim.lsp.config("model_compiler", {
-			cmd = {
-				"node",
-				vim.fn.expand("~/projects/model-compiler/packages/model-language-server/dist/server.js"),
-				"--stdio",
-			},
-			filetypes = { "pagemodel" },
-			root_markers = { "package.json", ".git" },
-		})
-
-		vim.lsp.enable({ "ts_ls", "lua_ls", "pyright", "html", "cssls", "gopls", "jsonls", "omnisharp", "clangd", "tailwindcss", "sqls", "model_compiler" })
+			vim.lsp.enable({
+				"ts_ls",
+				"lua_ls",
+				"pyright",
+				"html",
+				"cssls",
+				"gopls",
+				"jsonls",
+				"omnisharp",
+				"clangd",
+				"tailwindcss",
+				"sqls",
+				"model_compiler",
+				"rust_analyzer",
+			})
 
 			-- UI & Keymaps
 			local opts = {}
