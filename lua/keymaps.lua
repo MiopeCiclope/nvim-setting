@@ -7,9 +7,13 @@ map("n", "<c-j>", ":wincmd j<CR>", opts)
 map("n", "<c-l>", ":wincmd l<CR>", opts)
 map("n", "<c-h>", ":wincmd h<CR>", opts)
 
--- Buffer navigation
-map("n", "ö", ":bprevious<CR>", opts)
-map("n", "ä", ":bnext<CR>", opts)
+-- Buffer navigation (history-based, like browser back/forward)
+map("n", "ö", function()
+	require("buffer_history").back()
+end, opts)
+map("n", "ä", function()
+	require("buffer_history").forward()
+end, opts)
 map("n", "<C-e>", ":bnext | bd #<CR>", opts)
 
 -- Quick commands

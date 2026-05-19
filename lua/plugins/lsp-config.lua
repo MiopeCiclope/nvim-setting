@@ -26,13 +26,18 @@ return {
 				end
 
 				if not is_listening() then
-					vim.notify("Starting IntelliJ LSP server...", vim.log.levels.INFO)
+					vim.notify("Starting IntelliJ LSP server (headless)...", vim.log.levels.INFO)
 					vim.fn.jobstart({
 						vim.fn.expand("~/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"),
 						"lsp-server",
 						"tcp",
 						"8989",
-					}, { detach = true })
+					}, {
+						detach = true,
+						env = {
+							_JAVA_OPTIONS = "-Djava.awt.headless=true -Dapple.awt.UIElement=true",
+						},
+					})
 
 					-- Wait up to 30s for port to open (processes UI events between checks)
 					local ok = vim.fn.wait(30000, is_listening, 500)
