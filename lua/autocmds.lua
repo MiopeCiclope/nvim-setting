@@ -13,10 +13,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- JSON Tree-sitter highlighting for .pm files (LSP stays as model_compiler)
 vim.treesitter.language.register("json", "pagemodel")
 
--- Provide a :W command (write file)
-vim.api.nvim_create_user_command("W", function()
-	vim.cmd("write")
-end, {})
+vim.cmd("command! W write")
 
 -- Copy full path to clipboard
 vim.api.nvim_create_user_command("CopyFullPath", function()

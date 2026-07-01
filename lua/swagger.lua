@@ -2,6 +2,14 @@ local M = {}
 
 local METHODS = { "get", "post", "put", "patch", "delete", "head", "options" }
 
+local function pretty_json(raw)
+	local out = vim.fn.system(
+		{ "python3", "-c", "import json,sys; print(json.dumps(json.loads(sys.stdin.read()), indent=2))" },
+		raw
+	)
+	return vim.v.shell_error == 0 and vim.trim(out) or raw
+end
+
 local function resolve_ref(ref, spec)
 	if not ref then return nil end
 	local node = spec
@@ -55,11 +63,7 @@ local function request_body_json(operation, spec)
 	local example = schema_to_example(jc.schema, spec, 0)
 	if example == nil then return "{}" end
 	local raw = vim.json.encode(example)
-	local pretty = vim.fn.system(
-		{ "python3", "-c", "import json,sys; print(json.dumps(json.loads(sys.stdin.read()), indent=2))" },
-		raw
-	)
-	return vim.v.shell_error == 0 and vim.trim(pretty) or raw
+	return pretty_json(raw)
 end
 
 local function query_params(operation)
@@ -188,11 +192,7 @@ function M.import(base_url)
 			env.dev[param] = ""
 		end
 	end
-	local env_json = vim.fn.system(
-		{ "python3", "-c", "import json,sys; print(json.dumps(json.loads(sys.stdin.read()), indent=2))" },
-		vim.json.encode(env)
-	)
-	vim.fn.writefile(vim.split(vim.trim(env_json), "\n", { plain = true }), env_fname)
+	vim.fn.writefile(vim.split(pretty_json(vim.json.encode(env)), "\n", { plain = true }), env_fname)
 
 	local fname = vim.fn.getcwd() .. "/api-calls.http"
 	vim.fn.writefile(lines, fname)

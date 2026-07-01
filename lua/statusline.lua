@@ -42,10 +42,4 @@ vim.opt.statusline = table.concat({
 	" %=%=%l:%c ",
 })
 
-vim.api.nvim_create_user_command("ToggleFullPath", function()
-	vim.g.show_full_path = not vim.g.show_full_path
-	vim.cmd("redrawstatus")
-	print("Full path: " .. (vim.g.show_full_path and "ON" or "OFF"))
-end, {})
-
 return M

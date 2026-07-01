@@ -89,7 +89,7 @@ function M.default_callback(selected_list)
 end
 
 function M.fzf_command(cmd, callback)
-	local temp_file = utils.get_temp_file("_fzf")
+	local temp_file = utils.get_temp_file()
 	local win = utils.create_float_window()
 
 	local callback_function = callback or M.default_callback

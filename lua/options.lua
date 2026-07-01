@@ -20,13 +20,3 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 16
 vim.opt.laststatus = 3
 
--- vim.opt.wildmenu = true
--- vim.opt.wildmode = "longest:full,full"
-
--- Diagnostics
--- vim.diagnostic.config({
--- 	virtual_text = true,
--- 	virtual_lines = true,
--- })
-
--- vim.cmd("set showtabline=2")

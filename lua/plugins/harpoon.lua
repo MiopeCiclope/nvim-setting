@@ -25,8 +25,7 @@ return {
     harpoon:setup({
       [get_git_branch()] = {
         display = function(list_item)
-          local cropped_path, tail = list_item.value:match("^(.*)/(.*)$")
-          return string.format("%s - %s/", tail, cropped_path)
+          return require("utils").filename_format(list_item.value)
         end,
       },
     })
