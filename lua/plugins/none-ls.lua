@@ -25,7 +25,7 @@ return {
 			method = null_ls.methods.DIAGNOSTICS,
 			filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
 			generator = null_ls.generator({
-				command = "/opt/homebrew/bin/oxlint",
+				command = "oxlint",
 				args = { "--format", "json", "$FILENAME" },
 				to_stdin = false,
 				check_exit_code = function(code)

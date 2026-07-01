@@ -83,8 +83,15 @@ Results are written to a temp file and parsed in `on_exit`. Single selection ope
 ## External Dependencies
 
 Required: `fzf`, `git`, `bat`
+Required for treesitter (`main` branch): `tree-sitter` CLI — used to compile
+parsers. Install with `npm i -g tree-sitter-cli` (the Homebrew `tree-sitter`
+formula ships only the library, not the CLI binary).
 Optional: `tmux` (pane navigation via vim-tmux-navigator)
 AI: Ollama on `localhost:11434` (models: deepseek-coder-v2, qwen2.5-coder:1.5b-base)
+
+LSP servers and most linters/formatters auto-install on startup via
+`mason-tool-installer` (see `lua/plugins/lsp-config.lua`). Exceptions installed
+via Homebrew: `black` (Mason requires Python >=3.10), `stylua`.
 
 ## Key Mappings Reference
 

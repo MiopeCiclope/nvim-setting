@@ -5,6 +5,36 @@ return {
 		config = true,
 	},
 	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependencies = { "williamboman/mason.nvim" },
+		config = function()
+			require("mason-tool-installer").setup({
+				ensure_installed = {
+					-- LSP servers (Mason package names)
+					"lua-language-server",
+					"typescript-language-server",
+					"pyright",
+					"html-lsp",
+					"css-lsp",
+					"gopls",
+					"json-lsp",
+					"clangd",
+					"tailwindcss-language-server",
+					"sqls",
+					"omnisharp",
+					"rust-analyzer", -- or install via rustup; remove if preferred
+					-- linters / formatters
+					"oxlint",
+					"prettier",
+					"stylua",
+					-- black is installed via Homebrew (Mason needs python >=3.10, system has 3.9)
+					"buf",
+				},
+				run_on_start = true,
+			})
+		end,
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"williamboman/mason-lspconfig.nvim",
