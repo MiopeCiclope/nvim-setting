@@ -8,6 +8,9 @@ M.git_files = fzf.run({
 	extract      = "path",
 	deps         = { "fzf", "git", "bat" },
 	requires_git = true,
+	bindings     = {
+		{ key = "ctrl-l", reload = 'find . -type f -not -path "*.git/*"' },
+	},
 })
 
 M.buffers = fzf.run({
@@ -29,11 +32,14 @@ M.grep_search = fzf.run({
 	source = function()
 		local ok, p = pcall(vim.fn.input, "Grep Search: ")
 		if not ok or p == "" then return nil end
-		return "git grep -i --line-number --color=always " .. vim.fn.shellescape(p)
+		return {
+			cmd   = "git grep -i --line-number " .. vim.fn.shellescape(p),
+			query = p,
+		}
 	end,
 	display      = "grep",
 	preview      = "grep",
-	extract      = "path_line",
+	extract      = "path_line_text",
 	deps         = { "fzf", "git", "bat" },
 	requires_git = true,
 })
