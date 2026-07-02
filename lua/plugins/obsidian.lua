@@ -55,10 +55,13 @@ return {
 				return
 			end
 
-			local buffers = string.format("grep -rl '%s' %s --include='*.md' ", pattern, vault_path)
-
-			local fzf_cmd = buffers .. fzf.DEFAULT_COMMAND_PIPE
-			fzf.fzf_command(fzf_cmd)
+			fzf.run({
+				source  = string.format("grep -rl '%s' %s --include='*.md'", pattern, vault_path),
+				display = "file",
+				preview = "file",
+				extract = "path",
+				deps    = { "fzf", "bat" },
+			})()
 		end, { noremap = false })
 
 		vim.keymap.set("n", "<leader>og", function()
