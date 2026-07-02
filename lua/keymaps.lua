@@ -39,9 +39,9 @@ end, opts)
 map("x", "/", ":<C-u>/\\%V", opts)
 
 -- fzf integration
-map("n", "<C-p>", '<cmd>lua require("fzf").git_files()<CR>', opts)
-map("n", "<Leader>b", '<cmd>lua require("fzf").buffers()<CR>', opts)
-map("n", "<Leader>z", '<cmd>lua require("fzf").grep_search()<CR>', opts)
+map("n", "<C-p>", '<cmd>lua require("fzf_searches").git_files()<CR>', opts)
+map("n", "<Leader>b", '<cmd>lua require("fzf_searches").buffers()<CR>', opts)
+map("n", "<Leader>z", '<cmd>lua require("fzf_searches").grep_search()<CR>', opts)
 
 -- terminal
 map("n", "<Leader>t", function()
