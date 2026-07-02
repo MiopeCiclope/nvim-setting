@@ -32,3 +32,16 @@ vim.api.nvim_create_user_command("CopyFileName", function()
 	local filename = require("utils").get_filename_only()
 	vim.fn.setreg("+", filename)
 end, {})
+
+-- Open file at matched line as cursor moves in quickfix list
+vim.api.nvim_create_autocmd("CursorMoved", {
+	pattern = "quickfix",
+	callback = function()
+		local idx = vim.fn.line(".")
+		local entry = vim.fn.getqflist()[idx]
+		if entry and entry.bufnr ~= 0 then
+			vim.cmd("cc " .. idx)
+			vim.cmd("wincmd p")
+		end
+	end,
+})
