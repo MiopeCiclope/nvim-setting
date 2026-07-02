@@ -29,7 +29,7 @@ M.grep_search = fzf.run({
 	source = function()
 		local p = vim.fn.input("Grep Search: ")
 		if p == "" then return nil end
-		return "git grep -i --line-number --color=always " .. p
+		return "git grep -i --line-number --color=always " .. vim.fn.shellescape(p)
 	end,
 	display      = "grep",
 	preview      = "grep",
