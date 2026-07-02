@@ -27,8 +27,8 @@ M.buffers = fzf.run({
 
 M.grep_search = fzf.run({
 	source = function()
-		local p = vim.fn.input("Grep Search: ")
-		if p == "" then return nil end
+		local ok, p = pcall(vim.fn.input, "Grep Search: ")
+		if not ok or p == "" then return nil end
 		return "git grep -i --line-number --color=always " .. vim.fn.shellescape(p)
 	end,
 	display      = "grep",

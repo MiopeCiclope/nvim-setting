@@ -74,7 +74,7 @@ function M.fzf_command(cmd, callback)
 				if code == 0 then
 					local file = io.open(temp_file, "r")
 					if file then
-						local selected = file:read("*a"):gsub("^%s+", ""):gsub("%s+$", "")
+						local selected = vim.trim(file:read("*a"))
 						file:close()
 
 						if selected ~= "" then
@@ -87,8 +87,7 @@ function M.fzf_command(cmd, callback)
 									text     = parts[3] or "",
 								})
 							end
-							utils.cleanup_temp(temp_file)
-							return callback_function(qflist)
+							callback_function(qflist)
 						end
 					end
 				end
