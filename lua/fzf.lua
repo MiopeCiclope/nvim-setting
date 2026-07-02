@@ -1,11 +1,30 @@
 local utils = require("utils")
 local M = {}
 
-local FZF = "| fzf --ansi --multi --cycle --height 100% --border --bind 'ctrl-q:select-all' --delimiter=' - ' --with-nth=1,2"
+---@class FzfSourceResult
+---@field cmd string
+---@field query string?
+
+---@class FzfBinding
+---@field key string
+---@field reload string
+
+---@class FzfSpec
+---@field source string | fun(): string | FzfSourceResult | nil
+---@field display "file" | "grep"
+---@field preview "file" | "grep"
+---@field extract "path" | "path_line" | "path_line_text"
+---@field deps string[]
+---@field requires_git boolean?
+---@field bindings FzfBinding[]?
+
+local FZF = "| fzf --ansi --multi --cycle --height 100% --border"
+	.. " --bind 'ctrl-q:select-all' --delimiter=' - ' --with-nth=1,2"
+	.. " --color 'hl:yellow:bold,hl+:cyan:bold'"
 
 local STAGES = {
 	display = {
-		file = [[| awk -F'/' '{n=NF; filename=$n; if (n > 4) path=".../" $(n-2) "/" $(n-1) "/" $n; else path=$0; print filename " - " path " - " $0}']],
+		file = [[| awk -F'/' '{n=NF; filename=$n; if (n==1) dir="."; else if (n<=4) { dir=$1; for(i=2;i<n;i++) dir=dir"/"$i } else dir=".../"$(n-3)"/"$(n-2)"/"$(n-1); print filename " - " dir " - " $0}']],
 		grep = [[| awk -F':' '{filename=$1; rest=$0; sub(/[^:]*:/, "", rest); gsub(/:/, " - ", rest); split(filename, parts, "/"); print parts[length(parts)] " - " filename " - " rest}']],
 	},
 	preview = {
@@ -13,11 +32,14 @@ local STAGES = {
 		grep = "--preview 'bat --color=always --style=numbers --highlight-line {3} --line-range {3}:+20 {2}'",
 	},
 	extract = {
-		path      = "| awk -F' - ' '{print $3}'",
-		path_line = "| awk -F' - ' '{print $2 \":\" $3}'",
+		path           = "| awk -F' - ' '{print $3}'",
+		path_line      = "| awk -F' - ' '{print $2 \":\" $3}'",
+		path_line_text = "| awk -F' - ' '{print $2 \":\" $3 \":\" $4}'",
 	},
 }
 
+---@param spec FzfSpec
+---@return fun()
 function M.run(spec)
 	return function()
 		if not utils.check_dependencies(spec.deps) then return end
@@ -26,12 +48,21 @@ function M.run(spec)
 			return
 		end
 
-		local source = type(spec.source) == "function" and spec.source() or spec.source
-		if not source then return end
+		local result = type(spec.source) == "function" and spec.source() or spec.source
+		if not result then return end
+		local source_cmd   = type(result) == "table" and result.cmd   or result
+		local source_query = type(result) == "table" and result.query or nil
 
-		local cmd = source
+		local fzf_flags = FZF
+			.. (source_query and " --query " .. vim.fn.shellescape(source_query) or "")
+
+		for _, b in ipairs(spec.bindings or {}) do
+			fzf_flags = fzf_flags .. " --bind '" .. b.key .. ":reload(" .. b.reload .. ")'"
+		end
+
+		local cmd = source_cmd
 			.. " " .. STAGES.display[spec.display]
-			.. " " .. FZF
+			.. " " .. fzf_flags
 			.. " " .. STAGES.preview[spec.preview]
 			.. " " .. STAGES.extract[spec.extract]
 
@@ -56,6 +87,8 @@ function M.default_callback(selected_list)
 	end
 end
 
+---@param cmd string
+---@param callback (fun(list: table[]))?
 function M.fzf_command(cmd, callback)
 	local temp_file = utils.get_temp_file()
 	local win = utils.create_float_window()
@@ -84,7 +117,7 @@ function M.fzf_command(cmd, callback)
 								table.insert(qflist, {
 									filename = parts[1],
 									lnum     = tonumber(parts[2]) or 1,
-									text     = parts[3] or "",
+									text     = #parts >= 3 and table.concat(parts, ":", 3) or "",
 								})
 							end
 							callback_function(qflist)
