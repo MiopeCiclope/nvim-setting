@@ -10,16 +10,13 @@ function M.is_executable(cmd)
 	return vim.fn.executable(cmd) == 1
 end
 
-function M.check_dependencies()
-	local deps = { "fzf", "git", "bat" }
+function M.check_dependencies(deps)
 	local missing = {}
-
-	for _, dep in ipairs(deps) do
+	for _, dep in ipairs(deps or { "fzf", "git", "bat" }) do
 		if not M.is_executable(dep) then
 			table.insert(missing, dep)
 		end
 	end
-
 	if #missing > 0 then
 		print("Missing dependencies: " .. table.concat(missing, ", "))
 		return false
