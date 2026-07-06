@@ -6,34 +6,34 @@ if not ok then
 	vim.cmd("colorscheme habamax")
 end
 
--- Background / foreground — off-white fg for contrast without glare
-vim.cmd("highlight Normal guibg=#1c1c1c guifg=#c0c0c0")
+-- Background / foreground
+vim.cmd("highlight Normal guibg=#1c1c1c guifg=#e8e8e8")
 vim.cmd("highlight NormalNC guibg=#1c1c1c")
-vim.cmd("highlight NormalFloat guibg=#1c1c1c guifg=#c0c0c0")
+vim.cmd("highlight NormalFloat guibg=#1c1c1c guifg=#e8e8e8")
 
 -- Line numbers
-vim.cmd("highlight LineNr guifg=#585858")
-vim.cmd("highlight CursorLineNr guifg=#c0c0c0")
+vim.cmd("highlight LineNr guifg=#707070")
+vim.cmd("highlight CursorLineNr guifg=#e8e8e8")
 
--- Cursor line: very subtle, just barely distinguishable
+-- Cursor line: subtle
 vim.cmd("highlight CursorLine cterm=NONE guibg=#252525")
 vim.cmd("highlight! link Visual CursorLine")
 
 -- Window separator
-vim.cmd("highlight WinSeparator guifg=#3c3c3c")
+vim.cmd("highlight WinSeparator guifg=#505050")
 
--- Comments — slate blue-grey: readable but clearly secondary
-vim.cmd("highlight Comment guifg=#8899aa")
+-- Comments — bright enough to read in daylight, clearly secondary
+vim.cmd("highlight Comment guifg=#aabbcc")
 
 -- Float borders — neon green accent
 vim.cmd("highlight FloatBorder guifg=#00FF00")
 vim.cmd("highlight TelescopeBorder guifg=#00FF00")
 
 -- Completion menu
-vim.cmd("highlight Pmenu guibg=NONE guifg=#c0c0c0")
-vim.cmd("highlight PmenuSel guibg=#2e2e2e guifg=#c0c0c0")
-vim.cmd("highlight CursorLineBlink guifg=#c0c0c0 guibg=#2e2e2e")
-vim.cmd("highlight NonText guifg=#383838")
+vim.cmd("highlight Pmenu guibg=NONE guifg=#e8e8e8")
+vim.cmd("highlight PmenuSel guibg=#2e2e2e guifg=#e8e8e8")
+vim.cmd("highlight CursorLineBlink guifg=#e8e8e8 guibg=#2e2e2e")
+vim.cmd("highlight NonText guifg=#484848")
 
 -- Diagnostic underlines — neon green on the underline itself, text color unchanged
 vim.cmd("highlight DiagnosticUnderlineError gui=underline guisp=#00FF00")
@@ -43,23 +43,23 @@ vim.cmd("highlight DiagnosticUnderlineHint  gui=underline guisp=#00FF00")
 
 -- Treesitter: 4 color groups
 -- Strings / constants → warm gold
-vim.cmd("highlight @string guifg=#c8a050")
-vim.cmd("highlight @string.special guifg=#c8a050")
-vim.cmd("highlight @constant guifg=#c8a050")
-vim.cmd("highlight @constant.builtin guifg=#c8a050")
+vim.cmd("highlight @string guifg=#e8b860")
+vim.cmd("highlight @string.special guifg=#e8b860")
+vim.cmd("highlight @constant guifg=#e8b860")
+vim.cmd("highlight @constant.builtin guifg=#e8b860")
 -- Keywords → cadet-blue cyan bold (classic vim feel)
-vim.cmd("highlight @keyword guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @keyword.function guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @keyword.return guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @keyword.operator guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @conditional guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @repeat guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @keyword.conditional guifg=#5f9ea0 gui=bold")
-vim.cmd("highlight @keyword.repeat guifg=#5f9ea0 gui=bold")
--- Comments → slate blue-grey
-vim.cmd("highlight @comment guifg=#8899aa")
--- Types → muted sage green
-vim.cmd("highlight @type guifg=#8fbc8f")
-vim.cmd("highlight @type.builtin guifg=#8fbc8f")
+vim.cmd("highlight @keyword guifg=#7ecece gui=bold")
+vim.cmd("highlight @keyword.function guifg=#7ecece gui=bold")
+vim.cmd("highlight @keyword.return guifg=#7ecece gui=bold")
+vim.cmd("highlight @keyword.operator guifg=#7ecece gui=bold")
+vim.cmd("highlight @conditional guifg=#7ecece gui=bold")
+vim.cmd("highlight @repeat guifg=#7ecece gui=bold")
+vim.cmd("highlight @keyword.conditional guifg=#7ecece gui=bold")
+vim.cmd("highlight @keyword.repeat guifg=#7ecece gui=bold")
+-- Comments → bright slate blue-grey
+vim.cmd("highlight @comment guifg=#aabbcc")
+-- Types → brighter sage green
+vim.cmd("highlight @type guifg=#aad4aa")
+vim.cmd("highlight @type.builtin guifg=#aad4aa")
 
 return M
