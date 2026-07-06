@@ -32,10 +32,7 @@ M.grep_search = fzf.run({
 	source = function()
 		local ok, p = pcall(vim.fn.input, "Grep Search: ")
 		if not ok or p == "" then return nil end
-		return {
-			cmd   = "git grep -i --line-number " .. vim.fn.shellescape(p),
-			query = p,
-		}
+		return "git grep -i --line-number " .. vim.fn.shellescape(p)
 	end,
 	display      = "grep",
 	preview      = "grep",
