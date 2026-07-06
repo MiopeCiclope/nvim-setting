@@ -44,20 +44,6 @@ function M.get_open_buffers()
 			vim.fn.getbufinfo({ buflisted = 1 })))
 end
 
-function M.create_float_window(size)
-	local size_percentage = size or 0.95
-	local buf = vim.api.nvim_create_buf(false, true)
-	return vim.api.nvim_open_win(buf, true, {
-		relative = "editor",
-		width = math.floor(vim.o.columns * size_percentage),
-		height = math.floor(vim.o.lines * size_percentage),
-		row = math.floor((vim.o.lines - math.floor(vim.o.lines * size_percentage)) / 2),
-		col = math.floor((vim.o.columns - math.floor(vim.o.columns * size_percentage)) / 2),
-		style = "minimal",
-		border = "rounded",
-	})
-end
-
 function M.open_file(selected_file, line_number)
 	vim.cmd("edit " .. vim.fn.fnameescape(selected_file))
 

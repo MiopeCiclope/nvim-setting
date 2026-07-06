@@ -18,7 +18,7 @@ local M = {}
 ---@field requires_git boolean?
 ---@field bindings FzfBinding[]?
 
-local FZF = "| fzf --ansi --multi --cycle --height 100% --border"
+local FZF = "| fzf --ansi --multi --cycle"
 	.. " --bind 'ctrl-q:select-all' --delimiter=' - ' --with-nth=1,2"
 	.. " --color 'hl:yellow:bold,hl+:cyan:bold'"
 
@@ -96,17 +96,19 @@ end
 ---@param callback (fun(list: table[]))?
 function M.fzf_command(cmd, callback)
 	local temp_file = utils.get_temp_file()
-	local win = utils.create_float_window()
 	local callback_function = callback or M.default_callback
 	local fzf_cmd = cmd .. " > " .. temp_file
+
+	vim.cmd("tabedit")
+	local tab = vim.api.nvim_get_current_tabpage()
 
 	vim.fn.jobstart(fzf_cmd, {
 		term = true,
 		pty = true,
 		on_exit = function(_, code, _)
 			vim.schedule(function()
-				if vim.api.nvim_win_is_valid(win) then
-					vim.api.nvim_win_close(win, true)
+				if vim.api.nvim_tabpage_is_valid(tab) then
+					vim.cmd("tabclose")
 				end
 
 				if code == 0 then
