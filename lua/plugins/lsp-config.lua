@@ -59,7 +59,6 @@ return {
 			})
 
 			-- UI & Keymaps
-			local opts = {}
 			local dashed_border = {
 				{ "┌", "FloatBorder" },
 				{ "╌", "FloatBorder" },
@@ -73,13 +72,13 @@ return {
 
 			vim.keymap.set("n", "<leader>h", function()
 				vim.lsp.buf.hover({ border = dashed_border })
-			end, opts)
-			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition, opts)
+			end)
+			vim.keymap.set("n", "<leader>g", vim.lsp.buf.definition)
 			vim.keymap.set("n", "<leader>G", function()
 				vim.cmd("vsplit")
 				vim.lsp.buf.definition()
-			end, opts)
-			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+			end)
+			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
 
 			vim.keymap.set("n", "<leader>L", function()
 				local current = vim.lsp.log.get_level()
