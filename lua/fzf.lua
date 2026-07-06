@@ -48,7 +48,12 @@ function M.run(spec)
 			return
 		end
 
-		local result = type(spec.source) == "function" and spec.source() or spec.source
+		local result
+		if type(spec.source) == "function" then
+			result = spec.source()
+		else
+			result = spec.source
+		end
 		if not result then return end
 		local source_cmd   = type(result) == "table" and result.cmd   or result
 		local source_query = type(result) == "table" and result.query or nil
