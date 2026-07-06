@@ -8,14 +8,14 @@ Modular Neovim config in Lua using **lazy.nvim** for plugin management.
 
 **Load order** (`init.lua`):
 1. Bootstrap lazy.nvim
-2. `require("options")` → `require("autocmds")` → `require("keymaps")` → `require("statusline")` → `require("terminal")`
+2. `require("options")` → `require("autocmds")` → `require("keymaps")` → `require("statusline")` → `require("colors")`
 3. `require("utils").setup_autopairs()`
 4. `require("lazy").setup("plugins")` — auto-loads all files in `lua/plugins/`
 
 **Core modules** (`lua/`):
-- `fzf.lua` — Custom FZF integration (git files, buffer search, grep). Spawns terminal jobs via `vim.fn.jobstart()`, writes results to temp files, opens them in floating windows.
-- `utils.lua` — Shared helpers: dependency checks (`fzf`, `git`, `bat`), floating window creation, temp file management, git repo detection, path utilities.
-- `terminal.lua` — Floating terminal window management.
+- `fzf.lua` — Custom FZF integration (git files, buffer search, grep). Spawns terminal jobs via `vim.fn.jobstart()`, writes results to temp files, opens results in a full-screen tab.
+- `utils.lua` — Shared helpers: dependency checks (`fzf`, `git`, `bat`), temp file management, git repo detection, path utilities.
+- `colors.lua` — Built-in colorscheme setup (retrobox/habamax fallback) with custom highlights; neon green #00FF00 as the sole accent.
 - `statusline.lua` — Custom statusline with diagnostics and dynamic filename display.
 
 **Plugin configs** (`lua/plugins/`): Each file returns a lazy.nvim plugin spec table. Key ones:
