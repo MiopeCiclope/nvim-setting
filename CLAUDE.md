@@ -100,7 +100,6 @@ via Homebrew: `black` (Mason requires Python >=3.10), `stylua`.
 | `<C-p>` | FZF git files |
 | `<Leader>b` | FZF buffer list |
 | `<Leader>z` | FZF grep search |
-| `<Leader>t` | Open floating terminal |
 | `<Leader>d` | Toggle diagnostics |
 | `<Leader>g` | Go to definition |
 | `<Leader>G` | Go to definition (split) |
