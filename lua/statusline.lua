@@ -16,16 +16,16 @@ function M.get_diagnostics()
 
 	local diagnostics = ""
 	if counts.errors > 0 then
-		diagnostics = diagnostics .. "  " .. counts.errors
+		diagnostics = diagnostics .. " E:" .. counts.errors
 	end
 	if counts.warnings > 0 then
-		diagnostics = diagnostics .. "  " .. counts.warnings
+		diagnostics = diagnostics .. " W:" .. counts.warnings
 	end
 	if counts.hints > 0 then
-		diagnostics = diagnostics .. " 󰌶 " .. counts.hints
+		diagnostics = diagnostics .. " H:" .. counts.hints
 	end
 	if counts.info > 0 then
-		diagnostics = diagnostics .. "  " .. counts.info
+		diagnostics = diagnostics .. " I:" .. counts.info
 	end
 	return diagnostics
 end
