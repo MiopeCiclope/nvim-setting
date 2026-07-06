@@ -126,7 +126,6 @@ end
 - `lua/autocmds.lua` - Automatic commands
 - `lua/utils.lua` - Utility functions and helpers
 - `lua/statusline.lua` - Statusline configuration
-- `lua/terminal.lua` - Terminal management
 - `lua/fzf.lua` - FZF integration and file management
 
 ### Plugin Configuration

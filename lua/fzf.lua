@@ -108,7 +108,8 @@ function M.fzf_command(cmd, callback)
 		on_exit = function(_, code, _)
 			vim.schedule(function()
 				if vim.api.nvim_tabpage_is_valid(tab) then
-					vim.cmd("tabclose")
+					local tabnr = vim.api.nvim_tabpage_get_number(tab)
+					vim.cmd("tabclose " .. tabnr)
 				end
 
 				if code == 0 then

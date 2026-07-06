@@ -9,6 +9,7 @@ end
 -- Background / foreground — off-white fg for contrast without glare
 vim.cmd("highlight Normal guibg=#1c1c1c guifg=#c0c0c0")
 vim.cmd("highlight NormalNC guibg=#1c1c1c")
+vim.cmd("highlight NormalFloat guibg=#1c1c1c guifg=#c0c0c0")
 
 -- Line numbers
 vim.cmd("highlight LineNr guifg=#585858")
@@ -37,6 +38,8 @@ vim.cmd("highlight NonText guifg=#383838")
 -- Diagnostic underlines — neon green on the underline itself, text color unchanged
 vim.cmd("highlight DiagnosticUnderlineError gui=underline guisp=#00FF00")
 vim.cmd("highlight DiagnosticUnderlineWarn  gui=underline guisp=#00FF00")
+vim.cmd("highlight DiagnosticUnderlineInfo  gui=underline guisp=#00FF00")
+vim.cmd("highlight DiagnosticUnderlineHint  gui=underline guisp=#00FF00")
 
 -- Treesitter: 4 color groups
 -- Strings / constants → warm gold

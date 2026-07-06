@@ -78,9 +78,6 @@ Shared helpers used by other modules.
 - `get_repo_relative_path()` / `get_full_path()` / `get_filename_only()` — path helpers used by clipboard commands
 - `setup_autopairs()` — inserts basic autopair keymaps for `{`, `[`, `(`, `"`, `` ` ``
 
-### `terminal.lua`
-Opens a floating terminal window using `utils.create_float_window()`, then runs `terminal` + `startinsert`.
-
 ### `statusline.lua`
 Custom statusline (no plugin). Shows: filename (togglable full path), modified flag, LSP diagnostics (errors/warnings/hints/info with icons), and cursor position. `:ToggleFullPath` switches between filename-only and full path.
 
