@@ -43,10 +43,4 @@ map("n", "<C-p>", '<cmd>lua require("fzf_searches").git_files()<CR>', opts)
 map("n", "<Leader>b", '<cmd>lua require("fzf_searches").buffers()<CR>', opts)
 map("n", "<Leader>z", '<cmd>lua require("fzf_searches").grep_search()<CR>', opts)
 
--- terminal
-map("n", "<Leader>t", function()
-	require("utils").create_float_window()
-	vim.cmd("terminal")
-	vim.cmd("startinsert")
-end, opts)
 map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
