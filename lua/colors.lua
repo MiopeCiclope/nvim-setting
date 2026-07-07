@@ -59,9 +59,9 @@ vim.cmd("highlight @keyword.conditional guifg=#7ecece gui=bold")
 vim.cmd("highlight @keyword.repeat guifg=#7ecece gui=bold")
 -- Comments → bright slate blue-grey
 vim.cmd("highlight @comment guifg=#aabbcc")
--- Types → brighter sage green
-vim.cmd("highlight @type guifg=#66cc66")
-vim.cmd("highlight @type.builtin guifg=#66cc66")
+-- Types → white
+vim.cmd("highlight @type guifg=#e8e8e8")
+vim.cmd("highlight @type.builtin guifg=#e8e8e8")
 -- Override all base-colorscheme greens to white
 vim.cmd("highlight @variable.builtin guifg=#e8e8e8")
 vim.cmd("highlight @property      guifg=#e8e8e8")
