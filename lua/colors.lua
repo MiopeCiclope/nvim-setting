@@ -17,7 +17,8 @@ vim.cmd("highlight CursorLineNr guifg=#e8e8e8")
 
 -- Cursor line: subtle
 vim.cmd("highlight CursorLine cterm=NONE guibg=#252525")
-vim.cmd("highlight! link Visual CursorLine")
+-- Visual selection: distinct blue-teal so selected text is immediately obvious
+vim.cmd("highlight Visual guibg=#1e3a5a")
 
 -- Window separator
 vim.cmd("highlight WinSeparator guifg=#505050")
@@ -59,7 +60,7 @@ vim.cmd("highlight @keyword.repeat guifg=#7ecece gui=bold")
 -- Comments → bright slate blue-grey
 vim.cmd("highlight @comment guifg=#aabbcc")
 -- Types → brighter sage green
-vim.cmd("highlight @type guifg=#aad4aa")
-vim.cmd("highlight @type.builtin guifg=#aad4aa")
+vim.cmd("highlight @type guifg=#66cc66")
+vim.cmd("highlight @type.builtin guifg=#66cc66")
 
 return M
