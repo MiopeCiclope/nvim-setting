@@ -62,8 +62,19 @@ vim.cmd("highlight @comment guifg=#aabbcc")
 -- Types → brighter sage green
 vim.cmd("highlight @type guifg=#66cc66")
 vim.cmd("highlight @type.builtin guifg=#66cc66")
--- Builtins (vim global, etc.) and injected vim option names → plain white
+-- Override all base-colorscheme greens to white
 vim.cmd("highlight @variable.builtin guifg=#e8e8e8")
-vim.cmd("highlight @property guifg=#e8e8e8")
+vim.cmd("highlight @property      guifg=#e8e8e8")
+vim.cmd("highlight Added          guifg=#e8e8e8")
+vim.cmd("highlight Define         guifg=#e8e8e8")
+vim.cmd("highlight DiagnosticOk   guifg=#e8e8e8")
+vim.cmd("highlight Include        guifg=#e8e8e8")
+vim.cmd("highlight Macro          guifg=#e8e8e8")
+vim.cmd("highlight OkMsg          guifg=#e8e8e8")
+vim.cmd("highlight Operator       guifg=#e8e8e8")
+vim.cmd("highlight PreCondit      guifg=#e8e8e8")
+vim.cmd("highlight PreProc        guifg=#e8e8e8")
+vim.cmd("highlight SpellLocal     guifg=#e8e8e8")
+vim.cmd("highlight Structure      guifg=#e8e8e8")
 
 return M
