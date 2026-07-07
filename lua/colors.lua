@@ -62,5 +62,8 @@ vim.cmd("highlight @comment guifg=#aabbcc")
 -- Types → brighter sage green
 vim.cmd("highlight @type guifg=#66cc66")
 vim.cmd("highlight @type.builtin guifg=#66cc66")
+-- Builtins (vim global, etc.) and injected vim option names → plain white
+vim.cmd("highlight @variable.builtin guifg=#e8e8e8")
+vim.cmd("highlight @property guifg=#e8e8e8")
 
 return M
