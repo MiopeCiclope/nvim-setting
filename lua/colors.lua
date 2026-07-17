@@ -28,6 +28,11 @@ local function apply_overrides()
 	vim.cmd("highlight DiagnosticUnderlineWarn  gui=underline guisp=#FF8800")
 	vim.cmd("highlight DiagnosticUnderlineInfo  gui=underline guisp=#00CCFF")
 	vim.cmd("highlight DiagnosticUnderlineHint  gui=underline guisp=#00FF00")
+
+	-- Group 9: Keywords / reserved words — distinct color, keep bold
+	vim.cmd("highlight Keyword   gui=bold guifg=#FF8800")
+	vim.cmd("highlight Statement gui=bold guifg=#FF8800")
+	vim.cmd("highlight @keyword  gui=bold guifg=#FF8800")
 end
 
 vim.cmd("colorscheme lunaperche")

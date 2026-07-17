@@ -33,6 +33,16 @@ vim.api.nvim_create_user_command("CopyFileName", function()
 	vim.fn.setreg("+", filename)
 end, {})
 
+-- Open this repo's orchestra workspace dir (set by dev.sh)
+vim.api.nvim_create_user_command("Orchestra", function()
+	local dir = vim.env.WORKSPACE_DIR
+	if not dir or dir == "" then
+		vim.notify("WORKSPACE_DIR not set (launch via `dev <repo>`)", vim.log.levels.WARN)
+		return
+	end
+	vim.cmd("Explore " .. vim.fn.fnameescape(dir))
+end, {})
+
 -- Open file at matched line as cursor moves in quickfix list
 vim.api.nvim_create_autocmd("CursorMoved", {
 	pattern = "quickfix",

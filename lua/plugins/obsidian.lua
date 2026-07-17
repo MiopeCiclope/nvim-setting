@@ -35,7 +35,7 @@ return {
 				template = nil,
 			},
 			ui = {
-				enable = true, -- set to false to disable all additional syntax features
+				enable = false, -- markview.nvim handles markdown UI; avoids conceallevel conflict
 				checkboxes = {
 					[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
 					["x"] = { char = "✔", hl_group = "ObsidianDone" },

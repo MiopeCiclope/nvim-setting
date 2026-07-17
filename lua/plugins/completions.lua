@@ -103,5 +103,13 @@ return {
 				},
 			},
 		},
+		config = function(_, opts)
+			require("blink.cmp").setup(opts)
+			vim.api.nvim_create_user_command("GhostTextToggle", function()
+				local cfg = require("blink.cmp.config")
+				cfg.completion.ghost_text.enabled = not cfg.completion.ghost_text.enabled
+				vim.notify("Ghost text: " .. (cfg.completion.ghost_text.enabled and "on" or "off"))
+			end, {})
+		end,
 	},
 }
