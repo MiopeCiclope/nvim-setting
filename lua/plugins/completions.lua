@@ -56,7 +56,7 @@ return {
 						winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLine,Search:NONE",
 					},
 				},
-				ghost_text = { enabled = true, show_with_menu = false },
+				ghost_text = { enabled = false, show_with_menu = false },
 				menu = {
 					auto_show = false,
 					border = "single",

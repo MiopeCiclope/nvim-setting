@@ -5,6 +5,7 @@ return {
 	},
 	config = function()
 		local null_ls = require("null-ls")
+		local cmd_resolver = require("null-ls.helpers.command_resolver")
 
 		local rustfmt = {
 			method = null_ls.methods.FORMATTING,
@@ -13,6 +14,17 @@ return {
 				command = "rustfmt",
 				args = { "--emit=stdout" },
 				to_stdin = true,
+			}),
+		}
+
+		local oxfmt = {
+			method = null_ls.methods.FORMATTING,
+			filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+			generator = null_ls.formatter({
+				command = "oxfmt",
+				args = { "--stdin-filepath=$FILENAME" },
+				to_stdin = true,
+				dynamic_command = cmd_resolver.from_node_modules(),
 			}),
 		}
 
@@ -59,7 +71,7 @@ return {
 			sources = {
 				-- JS/TS
 				oxlint,
-				null_ls.builtins.formatting.prettier,
+				oxfmt,
 
 				-- Rust
 				rustfmt,
