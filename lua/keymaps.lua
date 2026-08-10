@@ -49,7 +49,7 @@ map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 -- u: git status  i: diff arquivo  o: blame  n: log  m: diff PR (origin/main...HEAD)
 map("n", "<Leader>u", "<cmd>G<CR>", opts)
 map("n", "<Leader>i", function()
-	if vim.bo.filetype == "qf" then vim.cmd("wincmd p") end
+	if vim.bo.filetype == "qf" then vim.cmd("cc") end
 	vim.cmd("Gvdiffsplit")
 end, opts)
 map("n", "<Leader>o", "<cmd>G blame<CR>", opts)
@@ -57,6 +57,7 @@ map("n", "<Leader>n", "<cmd>G log --oneline<CR>", opts)
 map("n", "<Leader>m", function()
 	local base = vim.fn.system("git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}'"):gsub("\n", "")
 	if base == "" then base = "main" end
+	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("\n", "")
 	local files = vim.fn.systemlist("git diff --name-only origin/" .. base .. "...HEAD")
 	if #files == 0 then
 		vim.notify("Sem arquivos alterados em relação a origin/" .. base, vim.log.levels.INFO)
@@ -64,7 +65,7 @@ map("n", "<Leader>m", function()
 	end
 	local items = {}
 	for _, f in ipairs(files) do
-		table.insert(items, { filename = f, lnum = 1, text = f })
+		table.insert(items, { filename = root .. "/" .. f, lnum = 1, text = f })
 	end
 	vim.fn.setqflist(items, "r")
 	vim.cmd("copen")
