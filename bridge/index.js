@@ -109,7 +109,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     } else if (name === 'nvim_load_review') {
       const items = args.concerns
-        .map(c => `{'filename':'${c.file}','lnum':${c.line},'text':'${c.message.replace(/'/g, "\\'")}'}`)
+        .map(c => `{'filename':'${c.file.replace(/'/g, "\\'")}','lnum':${c.line},'text':'${c.message.replace(/'/g, "\\'")}'}`)
         .join(',');
       try {
         execSync(`nvim --server "${socket}" --remote-expr "setqflist([${items}])"`, { stdio: 'pipe' });
