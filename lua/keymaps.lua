@@ -46,12 +46,13 @@ map("n", "<Leader>z", '<cmd>lua require("fzf_searches").grep_search()<CR>', opts
 map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 
 -- Fugitive (git) — space + right hand
+-- u: git status  i: diff arquivo  o: blame  n: log  m: diff PR (origin/main...HEAD)
 map("n", "<Leader>u", "<cmd>G<CR>", opts)
 map("n", "<Leader>i", "<cmd>Gvdiffsplit<CR>", opts)
 map("n", "<Leader>o", "<cmd>G blame<CR>", opts)
 map("n", "<Leader>n", "<cmd>G log --oneline<CR>", opts)
 map("n", "<Leader>m", "<cmd>G diff origin/main...HEAD<CR>", opts)
 
--- Quickfix navigation (Claude review concerns)
+-- Quickfix navigation (Claude review concerns) — j: próximo  k: anterior
 map("n", "<Leader>j", "<cmd>cnext<CR>", opts)
 map("n", "<Leader>k", "<cmd>cprev<CR>", opts)
