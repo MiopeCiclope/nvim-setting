@@ -48,7 +48,10 @@ map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 -- Fugitive (git) — space + right hand
 -- u: git status  i: diff arquivo  o: blame  n: log  m: diff PR (origin/main...HEAD)
 map("n", "<Leader>u", "<cmd>G<CR>", opts)
-map("n", "<Leader>i", "<cmd>Gvdiffsplit<CR>", opts)
+map("n", "<Leader>i", function()
+	if vim.bo.filetype == "qf" then vim.cmd("wincmd p") end
+	vim.cmd("Gvdiffsplit")
+end, opts)
 map("n", "<Leader>o", "<cmd>G blame<CR>", opts)
 map("n", "<Leader>n", "<cmd>G log --oneline<CR>", opts)
 map("n", "<Leader>m", function()
