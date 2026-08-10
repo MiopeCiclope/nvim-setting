@@ -57,6 +57,17 @@ map("n", "<Leader>m", function()
 	vim.cmd("G diff origin/" .. base .. "...HEAD")
 end, opts)
 
+-- Fechar vimdiff e voltar ao arquivo
+map("n", "<Leader>q", function()
+	vim.cmd("diffoff!")
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+		if win ~= vim.api.nvim_get_current_win() and ft ~= "qf" then
+			pcall(vim.api.nvim_win_close, win, false)
+		end
+	end
+end, opts)
+
 -- Quickfix navigation (Claude review concerns) — j: próximo  k: anterior
 map("n", "<Leader>j", "<cmd>cnext<CR>", opts)
 map("n", "<Leader>k", "<cmd>cprev<CR>", opts)
