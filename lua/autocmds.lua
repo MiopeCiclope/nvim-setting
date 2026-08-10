@@ -51,6 +51,15 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Blame history navigation
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "fugitiveblame",
+	callback = function()
+		vim.keymap.set("n", "ö", "~", { buffer = true, noremap = true })
+		vim.keymap.set("n", "ä", "C", { buffer = true, noremap = true })
+	end,
+})
+
 -- Open file at matched line as cursor moves in quickfix list
 vim.api.nvim_create_autocmd("CursorMoved", {
 	pattern = "quickfix",
