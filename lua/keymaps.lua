@@ -54,7 +54,17 @@ map("n", "<Leader>n", "<cmd>G log --oneline<CR>", opts)
 map("n", "<Leader>m", function()
 	local base = vim.fn.system("git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}'"):gsub("\n", "")
 	if base == "" then base = "main" end
-	vim.cmd("G diff origin/" .. base .. "...HEAD")
+	local files = vim.fn.systemlist("git diff --name-only origin/" .. base .. "...HEAD")
+	if #files == 0 then
+		vim.notify("Sem arquivos alterados em relação a origin/" .. base, vim.log.levels.INFO)
+		return
+	end
+	local items = {}
+	for _, f in ipairs(files) do
+		table.insert(items, { filename = f, lnum = 1, text = f })
+	end
+	vim.fn.setqflist(items, "r")
+	vim.cmd("copen")
 end, opts)
 
 -- Fechar vimdiff e voltar ao arquivo
