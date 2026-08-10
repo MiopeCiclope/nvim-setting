@@ -17,8 +17,12 @@ function findSocket() {
 }
 
 function nvimExec(socket, cmd) {
-  const escaped = cmd.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  execSync(`nvim --server "${socket}" --remote-expr "execute('${escaped}')"`, { stdio: 'pipe' });
+  const escaped = cmd.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+  try {
+    execSync(`nvim --server "${socket}" --remote-expr "execute('${escaped}')"`, { stdio: 'pipe' });
+  } catch (err) {
+    throw new Error(`nvim command failed: ${err.stderr?.toString().trim() || err.message}`);
+  }
 }
 
 const TOOLS = [
@@ -88,7 +92,49 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  return { content: [{ type: 'text', text: 'not implemented' }] };
+  const { name, arguments: args } = request.params ?? {};
+  if (!name || !args) {
+    return { content: [{ type: 'text', text: 'Error: missing params.name or params.arguments' }], isError: true };
+  }
+  try {
+    const socket = findSocket();
+    let text;
+
+    if (name === 'nvim_open') {
+      const repoPath = process.env.REPO_PATH ?? '';
+      const abs = args.path.startsWith('/') ? args.path : `${repoPath}/${args.path}`;
+      const cmd = args.line ? `e +${args.line} ${abs}` : `e ${abs}`;
+      nvimExec(socket, cmd);
+      text = `Opened ${abs}${args.line ? ` at line ${args.line}` : ''}`;
+
+    } else if (name === 'nvim_load_review') {
+      const items = args.concerns
+        .map(c => `{'filename':'${c.file}','lnum':${c.line},'text':'${c.message.replace(/'/g, "\\'")}'}`)
+        .join(',');
+      try {
+        execSync(`nvim --server "${socket}" --remote-expr "setqflist([${items}])"`, { stdio: 'pipe' });
+      } catch (err) {
+        throw new Error(`setqflist failed: ${err.stderr?.toString().trim() || err.message}`);
+      }
+      nvimExec(socket, 'copen');
+      text = `Loaded ${args.concerns.length} concerns into quickfix`;
+
+    } else if (name === 'nvim_git') {
+      nvimExec(socket, `G ${args.command}`);
+      text = `Ran :G ${args.command}`;
+
+    } else if (name === 'nvim_exec') {
+      nvimExec(socket, args.command);
+      text = `Ran :${args.command}`;
+
+    } else {
+      throw new Error(`Unknown tool: ${name}`);
+    }
+
+    return { content: [{ type: 'text', text }] };
+  } catch (err) {
+    return { content: [{ type: 'text', text: `Error: ${err.message}` }], isError: true };
+  }
 });
 
 const transport = new StdioServerTransport();
