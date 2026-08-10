@@ -51,7 +51,11 @@ map("n", "<Leader>u", "<cmd>G<CR>", opts)
 map("n", "<Leader>i", "<cmd>Gvdiffsplit<CR>", opts)
 map("n", "<Leader>o", "<cmd>G blame<CR>", opts)
 map("n", "<Leader>n", "<cmd>G log --oneline<CR>", opts)
-map("n", "<Leader>m", "<cmd>G diff origin/main...HEAD<CR>", opts)
+map("n", "<Leader>m", function()
+	local base = vim.fn.system("git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}'"):gsub("\n", "")
+	if base == "" then base = "main" end
+	vim.cmd("G diff origin/" .. base .. "...HEAD")
+end, opts)
 
 -- Quickfix navigation (Claude review concerns) — j: próximo  k: anterior
 map("n", "<Leader>j", "<cmd>cnext<CR>", opts)
