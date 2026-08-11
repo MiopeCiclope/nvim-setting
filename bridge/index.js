@@ -2,7 +2,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { execSync } from 'child_process';
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync, writeFileSync } from 'fs';
 
 function findSocket() {
   const name = process.env.REPO_NAME;
@@ -108,16 +108,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       text = `Opened ${abs}${args.line ? ` at line ${args.line}` : ''}`;
 
     } else if (name === 'nvim_load_review') {
-      const items = args.concerns
-        .map(c => `{'filename':'${c.file.replace(/'/g, "\\'")}','lnum':${c.line},'text':'${c.message.replace(/'/g, "\\'")}'}`)
-        .join(',');
-      try {
-        execSync(`nvim --server "${socket}" --remote-expr "setqflist([${items}])"`, { stdio: 'pipe' });
-      } catch (err) {
-        throw new Error(`setqflist failed: ${err.stderr?.toString().trim() || err.message}`);
-      }
-      nvimExec(socket, 'copen');
-      text = `Loaded ${args.concerns.length} concerns into quickfix`;
+      const path = `/tmp/nvim-review-${process.env.REPO_NAME ?? 'default'}.json`;
+      writeFileSync(path, JSON.stringify(args.concerns));
+      nvimExec(socket, 'ClaudeReview');
+      text = `Loaded ${args.concerns.length} concerns into review`;
 
     } else if (name === 'nvim_git') {
       nvimExec(socket, `G ${args.command}`);
