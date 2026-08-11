@@ -39,7 +39,7 @@ function M.load(path)
 			virt_text = { { "  ▍ " .. c.message, "DiagnosticWarn" } },
 			virt_text_pos = "eol",
 		})
-		qf[#qf + 1] = { filename = abs, lnum = c.line, text = c.message }
+		qf[#qf + 1] = { filename = abs, lnum = row + 1, text = c.message }
 	end
 	vim.fn.setqflist({}, "r", { title = "Claude Review", items = qf })
 	if #concerns > 0 then
