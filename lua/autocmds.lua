@@ -64,6 +64,8 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("CursorMoved", {
 	pattern = "quickfix",
 	callback = function()
+		-- review de PR tem seu próprio follow (com diff) em keymaps.lua
+		if vim.fn.getqflist({ title = 0 }).title == "PR Review" then return end
 		local idx = vim.fn.line(".")
 		local entry = vim.fn.getqflist()[idx]
 		if entry and entry.bufnr ~= 0 then
