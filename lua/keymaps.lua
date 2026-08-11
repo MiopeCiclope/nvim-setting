@@ -291,3 +291,7 @@ end, opts)
 -- Quickfix navigation — j/k na própria lista já move e o diff segue
 map("n", "<Leader>j", "<cmd>silent! cnext<CR>", opts)
 map("n", "<Leader>k", "<cmd>silent! cprev<CR>", opts)
+
+map("n", "<Leader>rc", function()
+	require("review").clear()
+end, opts)
