@@ -21,7 +21,11 @@ function M.load(path)
 		vim.notify("review: arquivo vazio ou inexistente: " .. path, vim.log.levels.WARN)
 		return 0
 	end
-	local concerns = vim.json.decode(table.concat(lines, "\n"))
+	local ok, concerns = pcall(vim.json.decode, table.concat(lines, "\n"))
+	if not ok then
+		vim.notify("review: JSON inválido: " .. path, vim.log.levels.ERROR)
+		return 0
+	end
 	M.clear()
 	local cwd = vim.fn.getcwd()
 	local qf = {}
@@ -38,7 +42,9 @@ function M.load(path)
 		qf[#qf + 1] = { filename = abs, lnum = c.line, text = c.message }
 	end
 	vim.fn.setqflist({}, "r", { title = "Claude Review", items = qf })
-	vim.cmd("copen")
+	if #concerns > 0 then
+		vim.cmd("copen")
+	end
 	return #concerns
 end
 
