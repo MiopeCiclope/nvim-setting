@@ -231,11 +231,18 @@ end, opts)
 -- Fechar diff e quickfix, sobrando só o arquivo de trabalho
 map("n", "<Leader>q", function()
 	vim.cmd("diffoff!")
+	vim.cmd("cclose")
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		-- fecha janelas não-normais: quickfix, scratch base (nofile)
-		if vim.bo[vim.api.nvim_win_get_buf(win)].buftype ~= "" then
+		if
+			vim.api.nvim_win_is_valid(win)
+			and #vim.api.nvim_list_wins() > 1
+			and vim.bo[vim.api.nvim_win_get_buf(win)].buftype ~= ""
+		then
 			pcall(vim.api.nvim_win_close, win, false)
 		end
+	end
+	if vim.bo[vim.api.nvim_win_get_buf(vim.api.nvim_get_current_win())].buftype ~= "" then
+		vim.cmd("enew")
 	end
 end, opts)
 
@@ -254,3 +261,5 @@ end, opts)
 map("n", "<Leader>n", function()
 	require("commits").open()
 end, opts)
+
+-- so um teste

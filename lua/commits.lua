@@ -47,7 +47,7 @@ function M.open()
                 end,
             },
             {
-                key = "<C-b>",
+                key = "c",
                 desc = "checkout (detached)",
                 fn = function(entry)
                     if not entry.sha then return end
@@ -65,7 +65,7 @@ function M.open()
                 end,
             },
             {
-                key = "<C-r>",
+                key = "r",
                 desc = "soft reset to commit",
                 fn = function(entry)
                     if not entry.sha then return end
