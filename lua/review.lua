@@ -25,10 +25,10 @@ end
 function M.apply_concerns(concerns)
 	M.clear()
 	local files = {}
-	local cwd = vim.fn.getcwd()
+	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("[\r\n]+$", "")
 	for _, c in ipairs(concerns or {}) do
 		files[c.file] = true
-		local abs = c.file:sub(1, 1) == "/" and c.file or (cwd .. "/" .. c.file)
+		local abs = c.file:sub(1, 1) == "/" and c.file or (root .. "/" .. c.file)
 		local buf = vim.fn.bufadd(abs)
 		vim.fn.bufload(buf)
 		local last = vim.api.nvim_buf_line_count(buf)
