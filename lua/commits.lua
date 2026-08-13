@@ -28,6 +28,7 @@ function M.open()
                 key = "<CR>",
                 desc = "drill into commit",
                 fn = function(entry)
+                    if not entry.sha then return end
                     local sha = entry.sha
                     local diff_entries = gd.name_status_entries(sha .. "^.." .. sha)
                     if #diff_entries == 0 then
@@ -49,6 +50,7 @@ function M.open()
                 key = "<C-b>",
                 desc = "checkout (detached)",
                 fn = function(entry)
+                    if not entry.sha then return end
                     local sha = entry.sha
                     vim.ui.select({ "Yes", "No" }, { prompt = "Checkout " .. sha .. "? (detached HEAD)" }, function(choice)
                         if choice == "Yes" then
@@ -66,6 +68,7 @@ function M.open()
                 key = "<C-r>",
                 desc = "soft reset to commit",
                 fn = function(entry)
+                    if not entry.sha then return end
                     local sha = entry.sha
                     vim.ui.select({ "Yes", "No" }, { prompt = "Soft reset to " .. sha .. "?" }, function(choice)
                         if choice == "Yes" then
