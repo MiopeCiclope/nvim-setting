@@ -45,33 +45,62 @@ map("n", "<Leader>z", '<cmd>lua require("fzf_searches").grep_search()<CR>', opts
 
 map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 
-local function reload_status()
+map("n", "<Leader>u", function()
 	local gd = require("gitdiff")
-	local entries = gd.status_entries()
-	gd.reload(
-		"Save Work",
-		entries,
-		function(e)
+
+	local function make_resolve()
+		return function(e)
 			return {
 				left = e.left_path and { ref = "HEAD", path = e.left_path } or nil,
 				right = e.right_path and { worktree = true, path = e.right_path } or nil,
 			}
-		end,
-		nil
-	)
-end
+		end
+	end
 
-map("n", "<Leader>u", function()
-	local gd = require("gitdiff")
+	local function make_actions(reload_fn)
+		return {
+			{
+				key = "-",
+				fn = function(entry)
+					local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
+					if entry.stage_state == "staged" then
+						local path = entry.right_path or entry.left_path
+						vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " reset HEAD " .. vim.fn.shellescape(path))
+					else
+						local path = entry.right_path
+						if path then
+							vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " add " .. vim.fn.shellescape(path))
+						end
+					end
+					reload_fn()
+				end,
+			},
+		}
+	end
+
+	local cursor_line = { 1 }
+
+	local function reload()
+		local new_entries = gd.status_entries()
+		local line = math.min(cursor_line[1], math.max(1, #new_entries))
+		gd.reload("Save Work", new_entries, make_resolve(), make_actions(reload))
+		vim.fn.setpos(".", { 0, line, 1, 0 })
+	end
+
 	local entries = gd.status_entries()
 	gd.open({
 		title = "Save Work",
 		entries = entries,
-		resolve = function(e)
-			return {
-				left = e.left_path and { ref = "HEAD", path = e.left_path } or nil,
-				right = e.right_path and { worktree = true, path = e.right_path } or nil,
-			}
+		resolve = make_resolve(),
+		actions = make_actions(reload),
+	})
+
+	vim.api.nvim_create_autocmd("CursorMoved", {
+		group = vim.api.nvim_create_augroup("SaveWorkCursor", { clear = true }),
+		callback = function()
+			if vim.bo.filetype == "qf" and vim.fn.getqflist({ title = 0 }).title == "Save Work" then
+				cursor_line[1] = vim.fn.line(".")
+			end
 		end,
 	})
 end, opts)
