@@ -40,10 +40,11 @@ const TOOLS = [
   },
   {
     name: 'nvim_load_review',
-    description: 'Load Claude review concerns into nvim quickfix list and open it.',
+    description: 'Load Claude PR review into nvim: opens the branch diff (base...HEAD) on the gitdiff engine and overlays concerns as virtual lines. base is optional (auto-detected from origin/HEAD when omitted).',
     inputSchema: {
       type: 'object',
       properties: {
+        base: { type: 'string', description: 'Git ref to diff HEAD against (e.g. "origin/main"). Optional; auto-detected if omitted.' },
         concerns: {
           type: 'array',
           items: {
@@ -58,17 +59,6 @@ const TOOLS = [
         },
       },
       required: ['concerns'],
-    },
-  },
-  {
-    name: 'nvim_git',
-    description: 'Run a fugitive git command in nvim (e.g. "diff origin/main...HEAD", "blame").',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        command: { type: 'string', description: 'Fugitive command without the :G prefix' },
-      },
-      required: ['command'],
     },
   },
   {
@@ -109,13 +99,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     } else if (name === 'nvim_load_review') {
       const path = `/tmp/nvim-review-${process.env.REPO_NAME ?? 'default'}.json`;
-      writeFileSync(path, JSON.stringify(args.concerns));
+      const payload = { concerns: args.concerns };
+      if (args.base) payload.base = args.base;
+      writeFileSync(path, JSON.stringify(payload));
       nvimExec(socket, 'ClaudeReview');
-      text = `Loaded ${args.concerns.length} concerns into review`;
-
-    } else if (name === 'nvim_git') {
-      nvimExec(socket, `G ${args.command}`);
-      text = `Ran :G ${args.command}`;
+      text = `Loaded ${args.concerns.length} concerns (base ${args.base ?? 'auto'}) into review`;
 
     } else if (name === 'nvim_exec') {
       nvimExec(socket, args.command);
