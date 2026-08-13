@@ -48,6 +48,12 @@ map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 map("n", "<Leader>u", function()
 	local gd = require("gitdiff")
 
+	local function git_run(root, args)
+		local cmd = "git -C " .. vim.fn.shellescape(root) .. " " .. args
+		local out = vim.fn.system(cmd)
+		return out, vim.v.shell_error == 0
+	end
+
 	local function make_resolve()
 		return function(e)
 			return {
@@ -58,8 +64,9 @@ map("n", "<Leader>u", function()
 	end
 
 	local function make_actions(reload_fn)
+		local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
+
 		local function commit_action()
-			local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
 			local msg_buf = vim.api.nvim_create_buf(false, true)
 			vim.bo[msg_buf].buftype = "acwrite"
 			vim.bo[msg_buf].bufhidden = "wipe"
@@ -79,8 +86,12 @@ map("n", "<Leader>u", function()
 				end
 				local tmpfile = vim.fn.tempname()
 				vim.fn.writefile(lines, tmpfile)
-				vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " commit -F " .. vim.fn.shellescape(tmpfile))
+				local out, ok = git_run(root, "commit -F " .. vim.fn.shellescape(tmpfile))
 				vim.fn.delete(tmpfile)
+				if not ok then
+					vim.notify(out, vim.log.levels.ERROR)
+					return
+				end
 				pcall(vim.api.nvim_buf_delete, msg_buf, { force = true })
 				reload_fn()
 			end
@@ -99,15 +110,18 @@ map("n", "<Leader>u", function()
 			{
 				key = "-",
 				fn = function(entry)
-					local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
+					local out, ok
 					if entry.stage_state == "staged" then
 						local path = entry.right_path or entry.left_path
-						vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " reset HEAD " .. vim.fn.shellescape(path))
+						out, ok = git_run(root, "reset HEAD " .. vim.fn.shellescape(path))
 					else
 						local path = entry.right_path
 						if path then
-							vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " add " .. vim.fn.shellescape(path))
+							out, ok = git_run(root, "add " .. vim.fn.shellescape(path))
 						end
+					end
+					if ok == false then
+						vim.notify(out, vim.log.levels.ERROR)
 					end
 					reload_fn()
 				end,

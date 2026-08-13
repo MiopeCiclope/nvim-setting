@@ -204,13 +204,16 @@ end
 
 function M.status_entries()
 	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
-	local lines = vim.fn.systemlist("git -C " .. vim.fn.shellescape(root) .. " status --short")
+	local raw = vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " status --short -z")
+	local tokens = vim.split(raw, "\1", { plain = true })
 	local entries = {}
-	for _, line in ipairs(lines) do
-		if #line >= 4 then
-			local X = line:sub(1, 1)
-			local Y = line:sub(2, 2)
-			local rest = line:sub(4)
+	local i = 1
+	while i <= #tokens do
+		local token = tokens[i]
+		if #token >= 3 then
+			local X = token:sub(1, 1)
+			local Y = token:sub(2, 2)
+			local rest = token:sub(4)
 			local stage_state, marker, left_path, right_path
 
 			if X == "?" and Y == "?" then
@@ -224,10 +227,10 @@ function M.status_entries()
 				if X == "D" then
 					left_path = rest
 					right_path = nil
-				elseif X == "R" then
-					local old, new = rest:match("^(.+) %-> (.+)$")
-					left_path = old or rest
-					right_path = new or rest
+				elseif X == "R" or X == "C" then
+					right_path = rest
+					i = i + 1
+					left_path = tokens[i] or rest
 				else
 					left_path = X == "A" and nil or rest
 					right_path = rest
@@ -248,10 +251,10 @@ function M.status_entries()
 				if Y == "D" then
 					left_path = rest
 					right_path = nil
-				elseif X == "R" then
-					local old, new = rest:match("^(.+) %-> (.+)$")
-					left_path = old or rest
-					right_path = new or rest
+				elseif X == "R" or X == "C" then
+					right_path = rest
+					i = i + 1
+					left_path = tokens[i] or rest
 				else
 					left_path = rest
 					right_path = rest
@@ -274,6 +277,7 @@ function M.status_entries()
 				stage_state = stage_state,
 			}
 		end
+		i = i + 1
 	end
 	return entries
 end
