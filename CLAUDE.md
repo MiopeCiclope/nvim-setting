@@ -109,3 +109,6 @@ via Homebrew: `black` (Mason requires Python >=3.10), `stylua`.
 | `<Leader>1-5` | Harpoon jump to file |
 | `t` / `r` | Remap of `$` / `^` |
 | `w` | Remap of `b` (word back) |
+| `<Leader>u` | Uncommitted diff review (gitdiff engine) |
+| `<Leader>m` | Branch diff review vs base (origin/HEAD); PR review target |
+| `<Leader>å` | Clear Claude review concern overlays |
