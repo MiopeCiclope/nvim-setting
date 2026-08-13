@@ -45,6 +45,40 @@ function M.open()
                     })
                 end,
             },
+            {
+                key = "<C-b>",
+                desc = "checkout (detached)",
+                fn = function(entry)
+                    local sha = entry.sha
+                    vim.ui.select({ "Yes", "No" }, { prompt = "Checkout " .. sha .. "? (detached HEAD)" }, function(choice)
+                        if choice == "Yes" then
+                            vim.fn.system("git checkout " .. vim.fn.shellescape(sha))
+                            if vim.v.shell_error ~= 0 then
+                                vim.notify("checkout failed: " .. sha, vim.log.levels.ERROR)
+                            else
+                                vim.notify("Checked out " .. sha, vim.log.levels.INFO)
+                            end
+                        end
+                    end)
+                end,
+            },
+            {
+                key = "<C-r>",
+                desc = "soft reset to commit",
+                fn = function(entry)
+                    local sha = entry.sha
+                    vim.ui.select({ "Yes", "No" }, { prompt = "Soft reset to " .. sha .. "?" }, function(choice)
+                        if choice == "Yes" then
+                            vim.fn.system("git reset --soft " .. vim.fn.shellescape(sha))
+                            if vim.v.shell_error ~= 0 then
+                                vim.notify("soft reset failed: " .. sha, vim.log.levels.ERROR)
+                            else
+                                vim.notify("Soft reset to " .. sha, vim.log.levels.INFO)
+                            end
+                        end
+                    end)
+                end,
+            },
         },
     })
 end
