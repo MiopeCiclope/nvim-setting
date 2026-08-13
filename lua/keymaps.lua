@@ -178,8 +178,7 @@ map("n", "<Leader>j", "<cmd>silent! cnext<CR>", opts)
 map("n", "<Leader>k", "<cmd>silent! cprev<CR>", opts)
 
 map("n", "<Leader>m", function()
-	local review = require("review")
-	review.branch_review(review.detect_base(), {})
+	require("review").branch_review(nil, {})
 end, opts)
 
 map("n", "<Leader>å", function()
