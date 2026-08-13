@@ -250,3 +250,7 @@ end, opts)
 map("n", "<Leader>å", function()
 	require("review").clear()
 end, opts)
+
+map("n", "<Leader>n", function()
+	require("commits").open()
+end, opts)
