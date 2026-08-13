@@ -41,7 +41,7 @@ function M._parse_name_status(lines)
 end
 
 function M.name_status_entries(range)
-	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
+	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("[\r\n]+$", "")
 	local lines = vim.fn.systemlist(
 		"git -C " .. vim.fn.shellescape(root) .. " diff --name-status -M " .. range
 	)
