@@ -259,7 +259,7 @@ map("n", "<Leader>å", function()
 end, opts)
 
 map("n", "<Leader>n", function()
-	require("commits").open()
+	require("git.commits").open()
 end, opts)
 
 -- so um teste
