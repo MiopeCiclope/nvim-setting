@@ -45,6 +45,22 @@ map("n", "<Leader>z", '<cmd>lua require("fzf_searches").grep_search()<CR>', opts
 
 map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 
+local function reload_status()
+	local gd = require("gitdiff")
+	local entries = gd.status_entries()
+	gd.reload(
+		"Save Work",
+		entries,
+		function(e)
+			return {
+				left = e.left_path and { ref = "HEAD", path = e.left_path } or nil,
+				right = e.right_path and { worktree = true, path = e.right_path } or nil,
+			}
+		end,
+		nil
+	)
+end
+
 map("n", "<Leader>u", function()
 	local gd = require("gitdiff")
 	local entries = gd.status_entries()
