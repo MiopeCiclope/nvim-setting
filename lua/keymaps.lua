@@ -47,12 +47,9 @@ map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 
 map("n", "<Leader>u", function()
 	local gd = require("gitdiff")
-	local entries = gd.name_status_entries("HEAD")
-	for _, f in ipairs(vim.fn.systemlist("git ls-files --others --exclude-standard")) do
-		entries[#entries + 1] = { status = "?", left_path = nil, right_path = f, display = "?  " .. f }
-	end
+	local entries = gd.status_entries()
 	gd.open({
-		title = "Uncommitted",
+		title = "Save Work",
 		entries = entries,
 		resolve = function(e)
 			return {
