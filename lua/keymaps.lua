@@ -45,6 +45,43 @@ map("n", "<Leader>z", '<cmd>lua require("fzf_searches").grep_search()<CR>', opts
 
 map("n", "<Leader>c", "<cmd>CopyRepoPath<CR>", opts)
 
+local function parse_file_log(lines)
+	local entries = {}
+	local current_sha, current_subject
+	for _, line in ipairs(lines) do
+		if line == "" then
+			current_sha, current_subject = nil, nil
+		elseif not current_sha then
+			local sha, subject = line:match("^([0-9a-f]+)\t(.+)$")
+			if sha then
+				current_sha = sha
+				current_subject = subject
+			end
+		else
+			local parts = vim.split(line, "\t", { trimempty = true })
+			local st = parts[1] and parts[1]:sub(1, 1)
+			if st and parts[2] then
+				local path
+				if st == "R" or st == "C" then
+					path = parts[3]
+				else
+					path = parts[2]
+				end
+				entries[#entries + 1] = {
+					sha = current_sha,
+					subject = current_subject,
+					path = path,
+					display = current_sha:sub(1, 7) .. " " .. current_subject,
+				}
+				current_sha, current_subject = nil, nil
+			end
+		end
+	end
+	return entries
+end
+
+_G._test_parse_file_log = parse_file_log
+
 map("n", "<Leader>u", function()
 	local gd = require("gitdiff")
 
