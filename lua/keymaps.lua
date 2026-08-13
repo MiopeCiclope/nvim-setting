@@ -58,6 +58,43 @@ map("n", "<Leader>u", function()
 	end
 
 	local function make_actions(reload_fn)
+		local function commit_action()
+			local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
+			local msg_buf = vim.api.nvim_create_buf(false, true)
+			vim.bo[msg_buf].buftype = "acwrite"
+			vim.bo[msg_buf].bufhidden = "wipe"
+			vim.bo[msg_buf].swapfile = false
+			vim.cmd("botright split")
+			vim.api.nvim_win_set_buf(0, msg_buf)
+
+			local function confirm_commit()
+				local lines = vim.api.nvim_buf_get_lines(msg_buf, 0, -1, false)
+				local trimmed = {}
+				for _, l in ipairs(lines) do
+					if l:match("%S") then trimmed[#trimmed + 1] = l end
+				end
+				if #trimmed == 0 then
+					pcall(vim.api.nvim_buf_delete, msg_buf, { force = true })
+					return
+				end
+				local tmpfile = vim.fn.tempname()
+				vim.fn.writefile(lines, tmpfile)
+				vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " commit -F " .. vim.fn.shellescape(tmpfile))
+				vim.fn.delete(tmpfile)
+				pcall(vim.api.nvim_buf_delete, msg_buf, { force = true })
+				reload_fn()
+			end
+
+			vim.keymap.set("n", "<CR>", confirm_commit, { buffer = msg_buf, noremap = true })
+			vim.keymap.set("n", "q", function()
+				pcall(vim.api.nvim_buf_delete, msg_buf, { force = true })
+			end, { buffer = msg_buf, noremap = true })
+			vim.api.nvim_create_autocmd("BufWriteCmd", {
+				buffer = msg_buf,
+				callback = confirm_commit,
+			})
+		end
+
 		return {
 			{
 				key = "-",
@@ -73,6 +110,12 @@ map("n", "<Leader>u", function()
 						end
 					end
 					reload_fn()
+				end,
+			},
+			{
+				key = "cc",
+				fn = function(_)
+					commit_action()
 				end,
 			},
 		}
