@@ -30,6 +30,9 @@ function M.open()
                 fn = function(entry)
                     local sha = entry.sha
                     local diff_entries = gd.name_status_entries(sha .. "^.." .. sha)
+                    if #diff_entries == 0 then
+                        diff_entries = gd.name_status_entries("4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. sha)
+                    end
                     gd.open({
                         title = sha,
                         entries = diff_entries,
