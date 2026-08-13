@@ -99,11 +99,12 @@ function M.branch_review(base, concerns)
 	state.base = base or M.detect_base()
 	state.only = false
 	state.entries_all = require("gitdiff").name_status_entries(state.base .. "...HEAD")
-	state.concern_files = M.apply_concerns(concerns)
 	if #state.entries_all == 0 then
+		M.clear()
 		vim.notify("review: sem arquivos na branch", vim.log.levels.INFO)
 		return
 	end
+	state.concern_files = M.apply_concerns(concerns)
 	open_engine()
 end
 
