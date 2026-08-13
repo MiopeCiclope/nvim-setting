@@ -166,7 +166,7 @@ end, opts)
 map("n", "<Leader>q", function()
 	vim.cmd("diffoff!")
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		-- fecha janelas não-normais: quickfix, scratch base (nofile), fugitive
+		-- fecha janelas não-normais: quickfix, scratch base (nofile)
 		if vim.bo[vim.api.nvim_win_get_buf(win)].buftype ~= "" then
 			pcall(vim.api.nvim_win_close, win, false)
 		end
@@ -177,6 +177,10 @@ end, opts)
 map("n", "<Leader>j", "<cmd>silent! cnext<CR>", opts)
 map("n", "<Leader>k", "<cmd>silent! cprev<CR>", opts)
 
-map("n", "<Leader>rc", function()
+map("n", "<Leader>m", function()
+	require("review").branch_review(nil, {})
+end, opts)
+
+map("n", "<Leader>å", function()
 	require("review").clear()
 end, opts)

@@ -43,29 +43,12 @@ vim.api.nvim_create_user_command("Orchestra", function()
 	vim.cmd("Explore " .. vim.fn.fnameescape(dir))
 end, {})
 
--- Close fugitive buffers with q
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "fugitive", "git", "fugitiveblame" },
-	callback = function()
-		vim.keymap.set("n", "q", "<cmd>q<CR>", { buffer = true, noremap = true })
-	end,
-})
-
--- Blame history navigation
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "fugitiveblame",
-	callback = function()
-		vim.keymap.set("n", "ö", "~", { buffer = true, noremap = true })
-		vim.keymap.set("n", "ä", "C", { buffer = true, noremap = true })
-	end,
-})
-
 -- Open file at matched line as cursor moves in quickfix list
 vim.api.nvim_create_autocmd("CursorMoved", {
 	pattern = "quickfix",
 	callback = function()
 		-- review de PR tem seu próprio follow (com diff) em keymaps.lua
-		if vim.fn.getqflist({ title = 0 }).title == "PR Review" then return end
+		if vim.fn.getqflist({ title = 0 }).title == "Claude Review" then return end
 		local idx = vim.fn.line(".")
 		local entry = vim.fn.getqflist()[idx]
 		if entry and entry.bufnr ~= 0 then
