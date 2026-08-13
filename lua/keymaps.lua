@@ -67,10 +67,12 @@ local function parse_file_log(lines)
 				else
 					path = parts[2]
 				end
+				local left_path = (st == "R" or st == "C") and parts[2] or path
 				entries[#entries + 1] = {
 					sha = current_sha,
 					subject = current_subject,
 					path = path,
+					left_path = left_path,
 					display = current_sha:sub(1, 7) .. " " .. current_subject,
 				}
 				current_sha, current_subject = nil, nil
