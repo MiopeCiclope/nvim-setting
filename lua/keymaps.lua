@@ -50,7 +50,6 @@ local function parse_file_log(lines)
 	local current_sha, current_subject
 	for _, line in ipairs(lines) do
 		if line == "" then
-			current_sha, current_subject = nil, nil
 		elseif not current_sha then
 			local sha, subject = line:match("^([0-9a-f]+)\t(.+)$")
 			if sha then
@@ -83,6 +82,34 @@ local function parse_file_log(lines)
 end
 
 _G._test_parse_file_log = parse_file_log
+
+map("n", "<Leader>o", function()
+	local filepath = vim.fn.expand("%:p")
+	local filename = vim.fn.expand("%:t")
+	local raw = vim.fn.systemlist(
+		"git log --follow --format=%H%x09%s --name-status -- " .. vim.fn.shellescape(filepath)
+	)
+	local entries = parse_file_log(raw)
+	if #entries == 0 then
+		vim.notify("No file history found", vim.log.levels.INFO)
+		return
+	end
+	local function is_root(sha)
+		vim.fn.system("git rev-parse --verify " .. vim.fn.shellescape(sha .. "^") .. " 2>/dev/null")
+		return vim.v.shell_error ~= 0
+	end
+	local resolve = function(e)
+		local left = not is_root(e.sha) and { ref = e.sha .. "^", path = e.left_path } or nil
+		return { left = left, right = { ref = e.sha, path = e.path } }
+	end
+	_G._test_last_history_entries = entries
+	_G._test_last_history_resolve = resolve
+	require("gitdiff").open({
+		title = "File History: " .. filename,
+		entries = entries,
+		resolve = resolve,
+	})
+end, opts)
 
 map("n", "<Leader>u", function()
 	local gd = require("gitdiff")
