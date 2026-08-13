@@ -202,4 +202,111 @@ function M.open(opts)
 	preview_guarded()
 end
 
+function M.status_entries()
+	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
+	local raw = vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " status --short -z")
+	local tokens = vim.split(raw, "\1", { plain = true })
+	local entries = {}
+	local i = 1
+	while i <= #tokens do
+		local token = tokens[i]
+		if #token >= 3 then
+			local X = token:sub(1, 1)
+			local Y = token:sub(2, 2)
+			local rest = token:sub(4)
+			local stage_state, marker, left_path, right_path
+
+			if X == "?" and Y == "?" then
+				stage_state = "untracked"
+				marker = "?"
+				left_path = nil
+				right_path = rest
+			elseif X ~= " " and Y == " " then
+				stage_state = "staged"
+				marker = "+"
+				if X == "D" then
+					left_path = rest
+					right_path = nil
+				elseif X == "R" or X == "C" then
+					right_path = rest
+					i = i + 1
+					left_path = tokens[i] or rest
+				else
+					left_path = X == "A" and nil or rest
+					right_path = rest
+				end
+			elseif X == " " and Y ~= "?" then
+				stage_state = "unstaged"
+				marker = "~"
+				if Y == "D" then
+					left_path = rest
+					right_path = nil
+				else
+					left_path = rest
+					right_path = rest
+				end
+			else
+				stage_state = "both"
+				marker = "~"
+				if Y == "D" then
+					left_path = rest
+					right_path = nil
+				elseif X == "R" or X == "C" then
+					right_path = rest
+					i = i + 1
+					left_path = tokens[i] or rest
+				else
+					left_path = rest
+					right_path = rest
+				end
+			end
+
+			local display
+			if stage_state == "untracked" then
+				display = "? " .. rest
+			elseif (left_path and right_path and left_path ~= right_path) then
+				display = marker .. " " .. left_path .. " -> " .. right_path
+			else
+				display = marker .. " " .. (right_path or left_path or rest)
+			end
+
+			entries[#entries + 1] = {
+				display = display,
+				left_path = left_path,
+				right_path = right_path,
+				stage_state = stage_state,
+			}
+		end
+		i = i + 1
+	end
+	return entries
+end
+
+function M.reload(title, entries, resolve, actions)
+	if not state or state.title ~= title then return end
+	state.entries = entries
+	state.resolve = resolve
+	state.actions = actions or {}
+	local qf = {}
+	for i, e in ipairs(entries) do
+		qf[i] = { filename = "", lnum = 0, text = e.display }
+	end
+	local qf_buf = nil
+	for _, w in ipairs(vim.api.nvim_list_wins()) do
+		if vim.bo[vim.api.nvim_win_get_buf(w)].filetype == "qf" then
+			qf_buf = vim.api.nvim_win_get_buf(w)
+			break
+		end
+	end
+	vim.fn.setqflist({}, "r", { title = title, items = qf, quickfixtextfunc = "v:lua.GitdiffQftf" })
+	if qf_buf then
+		for _, a in ipairs(state.actions) do
+			vim.keymap.set("n", a.key, function()
+				local entry = state.entries[vim.fn.line(".")]
+				if entry then a.fn(entry) end
+			end, { buffer = qf_buf, noremap = true })
+		end
+	end
+end
+
 return M
