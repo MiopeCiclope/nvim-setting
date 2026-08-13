@@ -76,7 +76,7 @@ local function resolve(e)
 end
 
 local function open_engine()
-	local gd = require("gitdiff")
+	local gd = require("git.diff")
 	local entries = mark_display(filtered_entries(), state.concern_files)
 	gd.open({
 		title = "Claude Review",
@@ -98,7 +98,7 @@ end
 function M.branch_review(base, concerns)
 	state.base = base or M.detect_base()
 	state.only = false
-	state.entries_all = require("gitdiff").name_status_entries(state.base .. "...HEAD")
+	state.entries_all = require("git.diff").name_status_entries(state.base .. "...HEAD")
 	if #state.entries_all == 0 then
 		M.clear()
 		vim.notify("review: sem arquivos na branch", vim.log.levels.INFO)

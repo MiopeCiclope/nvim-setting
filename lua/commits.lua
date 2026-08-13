@@ -18,7 +18,7 @@ function M.open()
         vim.notify("commits: no commits found", vim.log.levels.INFO)
         return
     end
-    local gd = require("gitdiff")
+    local gd = require("git.diff")
     gd.open({
         title = "Commits",
         entries = entries,

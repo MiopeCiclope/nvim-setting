@@ -104,7 +104,7 @@ map("n", "<Leader>o", function()
 	end
 	_G._test_last_history_entries = entries
 	_G._test_last_history_resolve = resolve
-	require("gitdiff").open({
+	require("git.diff").open({
 		title = "File History: " .. filename,
 		entries = entries,
 		resolve = resolve,
@@ -112,7 +112,7 @@ map("n", "<Leader>o", function()
 end, opts)
 
 map("n", "<Leader>u", function()
-	local gd = require("gitdiff")
+	local gd = require("git.diff")
 
 	local function git_run(root, args)
 		local cmd = "git -C " .. vim.fn.shellescape(root) .. " " .. args

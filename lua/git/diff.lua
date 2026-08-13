@@ -1,5 +1,14 @@
 local M = {}
 
+function M.root()
+	return vim.fn.system("git rev-parse --show-toplevel"):gsub("[\r\n]+$", "")
+end
+
+function M.run(args)
+	local out = vim.fn.system("git -C " .. vim.fn.shellescape(M.root()) .. " " .. args)
+	return out, vim.v.shell_error == 0
+end
+
 function M._parse_name_status(lines)
 	local entries = {}
 	for _, line in ipairs(lines) do
@@ -41,11 +50,8 @@ function M._parse_name_status(lines)
 end
 
 function M.name_status_entries(range)
-	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("[\r\n]+$", "")
-	local lines = vim.fn.systemlist(
-		"git -C " .. vim.fn.shellescape(root) .. " diff --name-status -M " .. range
-	)
-	return M._parse_name_status(lines)
+	local out = M.run("diff --name-status -M " .. range)
+	return M._parse_name_status(vim.split(out, "\n", { trimempty = true }))
 end
 
 local state = nil
@@ -179,7 +185,7 @@ function M.open(opts)
 		return
 	end
 	state = {
-		root = vim.fn.system("git rev-parse --show-toplevel"):gsub("[\r\n]+$", ""),
+		root = M.root(),
 		title = opts.title,
 		entries = opts.entries,
 		resolve = opts.resolve,
@@ -203,8 +209,7 @@ function M.open(opts)
 end
 
 function M.status_entries()
-	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("%s+", "")
-	local raw = vim.fn.system("git -C " .. vim.fn.shellescape(root) .. " status --short -z")
+	local raw = M.run("status --short -z")
 	local tokens = vim.split(raw, "\1", { plain = true })
 	local entries = {}
 	local i = 1
