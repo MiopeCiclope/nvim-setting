@@ -4,6 +4,20 @@ local ns = vim.api.nvim_create_namespace("claude_review")
 
 local state = { concern_files = {}, entries_all = {}, base = nil, only = false }
 
+local WRAP = 40
+
+local function wrap_cols(text)
+	local out, n, i = {}, vim.fn.strchars(text), 0
+	while i < n do
+		out[#out + 1] = { { vim.fn.strcharpart(text, i, WRAP), "DiagnosticWarn" } }
+		i = i + WRAP
+	end
+	if #out == 0 then
+		out[1] = { { "", "DiagnosticWarn" } }
+	end
+	return out
+end
+
 local function default_path()
 	return "/tmp/nvim-review-" .. (vim.env.REPO_NAME or "default") .. ".json"
 end
@@ -25,7 +39,7 @@ end
 function M.apply_concerns(concerns)
 	M.clear()
 	local files = {}
-	local root = vim.fn.system("git rev-parse --show-toplevel"):gsub("[\r\n]+$", "")
+	local root = require("git.diff").root()
 	for _, c in ipairs(concerns or {}) do
 		files[c.file] = true
 		local abs = c.file:sub(1, 1) == "/" and c.file or (root .. "/" .. c.file)
@@ -34,7 +48,7 @@ function M.apply_concerns(concerns)
 		local last = vim.api.nvim_buf_line_count(buf)
 		local row = math.max(0, math.min(c.line, last) - 1)
 		vim.api.nvim_buf_set_extmark(buf, ns, row, 0, {
-			virt_lines = { { { c.message, "DiagnosticWarn" } } },
+			virt_lines = wrap_cols(c.message),
 			virt_lines_above = true,
 		})
 	end

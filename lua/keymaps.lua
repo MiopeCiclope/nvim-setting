@@ -251,11 +251,11 @@ map("n", "<Leader>j", "<cmd>silent! cnext<CR>", opts)
 map("n", "<Leader>k", "<cmd>silent! cprev<CR>", opts)
 
 map("n", "<Leader>m", function()
-	require("review").branch_review(nil, {})
+	require("git.review").branch_review(nil, {})
 end, opts)
 
 map("n", "<Leader>å", function()
-	require("review").clear()
+	require("git.review").clear()
 end, opts)
 
 map("n", "<Leader>n", function()
