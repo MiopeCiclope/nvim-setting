@@ -33,6 +33,9 @@ local function apply_overrides()
 	vim.cmd("highlight Keyword   gui=bold guifg=#FF8800")
 	vim.cmd("highlight Statement gui=bold guifg=#FF8800")
 	vim.cmd("highlight @keyword  gui=bold guifg=#FF8800")
+
+	-- presentation mode
+	vim.cmd("highlight Visual guibg=red guifg=white")
 end
 
 vim.cmd("colorscheme lunaperche")
